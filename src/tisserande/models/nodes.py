@@ -21,39 +21,6 @@ class NodeBase(BaseModel):
         return v
 
 
-class NodeCreate(NodeBase):
-    """Generic node creation model."""
-
-    path: str | None = Field(default=None, description="File path (for file nodes)")
-    config_data: dict[str, Any] | None = Field(
-        default=None, description="Config data (for config dict nodes)"
-    )
-    value_float: float | None = Field(default=None, description="Float value (for parameter nodes)")
-    value_json: Any | None = Field(
-        default=None, description="JSON-serializable value (for array/object nodes)"
-    )
-    arg_name: str | None = Field(default=None, description="Argument name in function signature")
-    execution_id: UUID | None = Field(default=None, description="Execution this node belongs to")
-
-    data_file_type_name: str | None = None
-    data_file_type_id: int | None = None
-    config_file_type_name: str | None = None
-    config_file_type_id: int | None = None
-    config_dict_type_name: str | None = None
-    config_dict_type_id: int | None = None
-    parameter_name: str | None = None
-    parameter_id: int | None = None
-    array_name: str | None = None
-    array_id: int | None = None
-    class_name: str | None = None
-    class_id: int | None = None
-    python_function_name: str | None = None
-    python_function_id: int | None = None
-    member_function_name: str | None = None
-    member_function_id: int | None = None
-    shell_function_name: str | None = None
-    shell_function_id: int | None = None
-
 
 class Node(NodeBase):
     """Node response model."""
@@ -299,6 +266,19 @@ class ShellFunctionNode(ShellFunctionNodeBase, _TypedNodeResponseMixin):
 
     shell_function_id: int | None = None
 
+
+AnyNodeCreate = Annotated[
+    DataFileNodeCreate
+    | ConfigFileNodeCreate
+    | ConfigDictNodeCreate
+    | ParameterNodeCreate
+    | ArrayNodeCreate
+    | ObjectNodeCreate
+    | PythonFunctionNodeCreate
+    | MemberFunctionNodeCreate
+    | ShellFunctionNodeCreate,
+    Field(discriminator="type_"),
+]
 
 AnyNode = Annotated[
     DataFileNode

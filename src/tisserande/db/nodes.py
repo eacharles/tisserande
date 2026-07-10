@@ -40,7 +40,9 @@ class NodeTable(Base):
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.NodeCreate
+        from ..models.nodes import NodeBase
+
+        return NodeBase
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:

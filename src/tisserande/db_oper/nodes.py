@@ -3,7 +3,7 @@ from typing import Any
 from macon import db_funcs
 from macon.db.base import ensure_base_inheritance
 from macon.db_oper.base import TableContext, TableOperations
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from structlog import get_logger
 
@@ -63,7 +63,20 @@ _TYPE_DB_CLASS_MAP: dict[str, type[NodeTable]] = {
 }
 
 
-class NodeOperations(TableOperations[NodeTable, models.Node, models.NodeCreate]):
+_TYPE_CREATE_MODEL_MAP: dict[str, type[BaseModel]] = {
+    NodeType.DATA_FILE.value: models.DataFileNodeCreate,
+    NodeType.CONFIG_FILE.value: models.ConfigFileNodeCreate,
+    NodeType.CONFIG_DICT.value: models.ConfigDictNodeCreate,
+    NodeType.PARAMETER.value: models.ParameterNodeCreate,
+    NodeType.ARRAY.value: models.ArrayNodeCreate,
+    NodeType.OBJECT.value: models.ObjectNodeCreate,
+    NodeType.PYTHON_FUNCTION.value: models.PythonFunctionNodeCreate,
+    NodeType.MEMBER_FUNCTION.value: models.MemberFunctionNodeCreate,
+    NodeType.SHELL_FUNCTION.value: models.ShellFunctionNodeCreate,
+}
+
+
+class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreate]):
     """Operations for the Node table with polymorphic dispatch and FK resolution."""
 
     async def get_create_kwargs(
@@ -105,7 +118,12 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.NodeCreate])
 
         if validate:
             try:
-                self.ctx.create_class.model_validate(kwargs)
+                type_value_for_validation = kwargs.get("type_")
+                if isinstance(type_value_for_validation, NodeType):
+                    type_value_for_validation = type_value_for_validation.value
+                create_model = _TYPE_CREATE_MODEL_MAP.get(type_value_for_validation)  # type: ignore[arg-type]
+                if create_model is not None:
+                    create_model.model_validate(kwargs)
             except ValidationError as e:
                 logger.warning("Validation failed in create_row", errors=e.errors())
                 raise

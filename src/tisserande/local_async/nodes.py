@@ -5,7 +5,7 @@ from ..db.nodes import NodeTable
 from ..db_oper.nodes import node as node_ops
 
 
-class NodeLocalOperations(LocalOperations[NodeTable, models.Node, models.NodeCreate]):
+class NodeLocalOperations(LocalOperations[NodeTable, models.Node, models.AnyNodeCreate]):
     """Async session-managed operations for nodes."""
 
 
