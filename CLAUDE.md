@@ -48,17 +48,19 @@ Each node type can optionally reference a **type table** (e.g., `data_file_type`
 ## Key Patterns
 
 - **Single Node table**: All node types share one table with nullable columns. Simplifies graph queries since edges reference only one table.
-- **UUID7 primary keys** for nodes/executions (time-ordered, via `uuid_utils`), int PKs for type tables and edges. Note: `uuid_utils.UUID` is not a subclass of `uuid.UUID` — we use a `_uuid7()` wrapper that returns standard `uuid.UUID`.
+- **UUID7 primary keys** for nodes/executions (time-ordered, via `uuid_utils`), int PKs for type tables and edges. Note: `uuid_utils.UUID` is not a subclass of `uuid.UUID` — we use a `uuid7()` wrapper in `db/utils.py` that returns standard `uuid.UUID`.
 - **Macon integration**: Inherits `macon.db.base.Base`, uses `TableOperations`, `LocalOperations`, `SyncOperations`, `create_table_router`, `make_table_group`.
 - **Three-model pattern** (from macon): `FooBase` → `FooCreate` (creation fields) → `Foo` (response with `id_`, `ConfigDict(from_attributes=True)`, `col_names_for_table`).
 - **Tracking annotations**: `Annotated[]` type aliases (`DataFile[T]`, `Param[T]`, etc.) control how arguments are classified.
 - **Pluggable backends**: `TrackingBackend` protocol allows `LocalSyncBackend` (real DB), `NullBackend` (testing), or custom implementations.
 - **Decorator no-op**: If `configure()` hasn't been called, `@track` is transparent (function runs without tracking overhead).
+- **Enum-based status/types**: Tracking code passes `ExecutionStatus` and `NodeType` enums; conversion to string values happens at the db_oper/backend layer.
+- **`reset()`**: Clears the configured backend, making `configure()` safe to call multiple times (useful in tests).
 
 ## Critical Files
 
 ### Tracking system
-- `src/tisserande/tracking/decorator.py` — `@track`, `@track_async`, `track_shell()`
+- `src/tisserande/tracking/decorator.py` — `@track`, `@track_async`, `track_shell()`, `configure()`, `reset()`, `get_backend()`
 - `src/tisserande/tracking/context.py` — `TrackingContext` orchestrates one execution lifecycle
 - `src/tisserande/tracking/inspector.py` — `ArgumentInspector` classifies args → NodeType
 - `src/tisserande/tracking/annotations.py` — `DataFile`, `Param`, `Untracked`, etc.
@@ -69,7 +71,9 @@ Each node type can optionally reference a **type table** (e.g., `data_file_type`
 - `src/tisserande/models/nodes.py` — All node Pydantic models (generic + typed variants)
 - `src/tisserande/db/nodes.py` — Single `NodeTable` ORM model
 - `src/tisserande/db/execution.py` — `ExecutionTable` ORM model
+- `src/tisserande/db/utils.py` — Shared `uuid7()` helper for time-ordered primary keys
 - `src/tisserande/db_oper/nodes.py` — `NodeOperations` with type-dependent FK resolution
+- `src/tisserande/db_oper/execution.py` — `ExecutionOperations` with status enum conversion
 
 ### Configuration
 - `src/tisserande/config.py` — `Configuration` class (env prefix: `TISSERANDE__`)
@@ -83,11 +87,22 @@ pip install -e ".[dev]"
 
 ### Testing
 ```bash
-pytest tests/                    # 28 tests, in-memory SQLite
+pytest tests/                    # 86 tests, in-memory SQLite, 100% coverage
 pytest tests/ -x --tb=short     # stop at first failure
+pytest tests/ --cov=tisserande --cov-report=term-missing  # with coverage
 ```
 
 Tests use `sqlite+aiosqlite://` (in-memory). The `conftest.py` fixture calls `init_db()` and creates all tables before each test.
+
+Test files:
+- `tests/test_tracking.py` — decorator and inspector unit tests with NullBackend
+- `tests/test_full_stack.py` — end-to-end integration tests with real DB
+- `tests/test_models.py` — Pydantic model validation
+- `tests/test_inspector_coverage.py` — comprehensive inspector branch coverage
+- `tests/test_decorator_coverage.py` — decorator flags and edge cases
+- `tests/test_cli.py` — CLI entry points (Click test runner + mocked uvicorn)
+- `tests/test_router.py` — FastAPI app creation and route registration
+- `tests/test_db_oper_coverage.py` — FK resolution paths
 
 Coverage exclusion patterns (in `pyproject.toml`):
 - `"pragma: no cover"` — explicit exclusion
@@ -96,10 +111,14 @@ Coverage exclusion patterns (in `pyproject.toml`):
 
 ### Linting & Type Checking
 ```bash
-ruff check src/ tests/
-ruff format src/ tests/
-mypy src/
+ruff check src/ tests/          # all checks pass
+ruff format src/ tests/         # auto-format
+mypy src/                       # no issues in 49 source files
+pylint src/                     # 10.00/10
 ```
+
+Ruff ignores: `COM812`, `N802-N816`, `UP047` (TypeVar over PEP 695 syntax).
+Pylint disables: `C0415` (lazy imports), `W0603` (globals), `R0911` (many returns).
 
 ### Documentation
 ```bash
@@ -125,10 +144,21 @@ cd docs && make html     # builds to docs/_build/html/
 - `tisserande-local` — local DB admin (CRUD for all tables via click)
 - `tisserande-server` — FastAPI/uvicorn server
 
+### CI/CD
+GitHub Actions workflows in `.github/workflows/`:
+- `linting.yml` — ruff + mypy on push/PR to main
+- `testing-and-coverage.yml` — pytest on push/PR + weekly schedule
+- `smoke-test.yml` — daily scheduled pytest run
+- `docs.yml` — Sphinx build on docs/source changes
+- `publish-to-pypi.yml` — trusted publishing on GitHub release
+
 ### Dependencies
 - Core: `macon[db]` (provides SQLAlchemy, pydantic, structlog, uuid_utils, anyio, aiosqlite, etc.)
 - Optional: `numpy` (array support), `macon[server]` (FastAPI server), `macon[client]` (HTTP client)
 - Docs: `sphinx`, `sphinx-autoapi`, `sphinx_rtd_theme`, `sphinx-autodoc-typehints`
+
+### Known Limitations
+- **`@track_async` with `LocalSyncBackend`**: Cannot be used inside an already-running event loop because `LocalSyncBackend` internally calls `asyncio.run()` via macon's `local_sync`. A future `LocalAsyncBackend` would resolve this. For now, `@track_async` works when the decorated coroutine is called from synchronous code (e.g., `asyncio.run(my_func(...))`).
 
 ### Adding a New Node Type
 
