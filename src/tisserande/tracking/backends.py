@@ -56,18 +56,18 @@ class NullBackend:
 
     _counter = itertools.count(1)
 
-    def create_execution(self, **kwargs: Any) -> UUID:
+    def create_execution(self, **kwargs: Any) -> UUID:  # pylint: disable=unused-argument
         import uuid
 
         return uuid.uuid4()
 
-    def update_execution(self, execution_id: UUID, **kwargs: Any) -> None:
+    def update_execution(self, execution_id: UUID, **kwargs: Any) -> None:  # pylint: disable=unused-argument
         pass
 
-    def create_node(self, **kwargs: Any) -> UUID:
+    def create_node(self, **kwargs: Any) -> UUID:  # pylint: disable=unused-argument
         import uuid
 
         return uuid.uuid4()
 
-    def create_edge(self, from_id: UUID, to_id: UUID, execution_id: UUID) -> int:
+    def create_edge(self, from_id: UUID, to_id: UUID, execution_id: UUID) -> int:  # pylint: disable=unused-argument
         return next(NullBackend._counter)
