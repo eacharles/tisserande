@@ -5,11 +5,12 @@ import pytest
 from tisserande.models.types import ExecutionStatus, NodeType
 from tisserande.tracking import configure, track, track_async, track_shell
 from tisserande.tracking.annotations import DataFile, Param
+from tisserande.tracking.backends import LocalSyncBackend
 
 
 class TestFullStack:
     def setup_method(self):
-        configure(db_url="sqlite+aiosqlite://")
+        configure(backend=LocalSyncBackend())
 
     def test_track_creates_provenance(self):
         @track

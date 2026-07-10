@@ -1,8 +1,11 @@
 """Tests for the tracking decorator with NullBackend."""
 
+import pytest
+
 from tisserande.tracking import configure, track, track_shell
 from tisserande.tracking.annotations import DataFile, Param
 from tisserande.tracking.backends import NullBackend
+from tisserande.tracking.context import TrackingContext
 from tisserande.tracking.inspector import ArgumentInspector
 
 
@@ -86,8 +89,6 @@ class TestTrackDecorator:
         def fail() -> None:
             raise ValueError("test error")
 
-        import pytest
-
         with pytest.raises(ValueError, match="test error"):
             fail()
 
@@ -129,3 +130,54 @@ class TestTrackShell:
     def test_track_shell_failure(self):
         result = track_shell("false", backend=self.backend)
         assert result.returncode != 0
+
+
+class TestTrackingContext:
+    def test_finish_before_start_raises(self):
+        def fn(x: float) -> float:
+            return x
+
+        ctx = TrackingContext(NullBackend())
+        inspector = ArgumentInspector(fn)
+        with pytest.raises(RuntimeError, match="finish_execution called before start_execution"):
+            ctx.finish_execution(inspector, result=1.0)
+
+
+class TestGetConfig:
+    def test_get_config_returns_valid_configuration(self):
+        import tisserande.config as cfg_module
+
+        cfg_module._config = None
+        config = cfg_module.get_config()
+        assert config is not None
+        assert config.db.url == "sqlite+aiosqlite:///tisserande.db"
+        assert config.tracking.enabled is True
+        cfg_module._config = None
+
+
+class TestConfigureWithDbUrl:
+    def test_configure_with_db_url_creates_backend(self):
+        import asyncio
+
+        from tisserande.db.base import close_db
+        from tisserande.tracking.backends import LocalSyncBackend
+        from tisserande.tracking.decorator import get_backend, reset
+
+        asyncio.run(close_db())
+        configure(db_url="sqlite+aiosqlite://")
+        backend = get_backend()
+        assert isinstance(backend, LocalSyncBackend)
+        reset()
+
+    def test_configure_without_args_uses_default(self):
+        import asyncio
+
+        from tisserande.db.base import close_db
+        from tisserande.tracking.backends import LocalSyncBackend
+        from tisserande.tracking.decorator import get_backend, reset
+
+        asyncio.run(close_db())
+        configure()
+        backend = get_backend()
+        assert isinstance(backend, LocalSyncBackend)
+        reset()
