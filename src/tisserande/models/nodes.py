@@ -1,9 +1,9 @@
 """Pydantic models for provenance graph nodes (data nodes and logic nodes)."""
 
-from typing import Any, ClassVar, Literal
+from typing import Annotated, Any, ClassVar, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from .types import NodeType
 
@@ -12,6 +12,13 @@ class NodeBase(BaseModel):
     """Base model for all graph nodes."""
 
     type_: NodeType = Field(..., description="What type of node")
+
+    @field_validator("type_", mode="before")
+    @classmethod
+    def _coerce_type(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            return NodeType(v)
+        return v
 
 
 class NodeCreate(NodeBase):
@@ -26,6 +33,7 @@ class NodeCreate(NodeBase):
         default=None, description="JSON-serializable value (for array/object nodes)"
     )
     arg_name: str | None = Field(default=None, description="Argument name in function signature")
+    execution_id: UUID | None = Field(default=None, description="Execution this node belongs to")
 
     data_file_type_name: str | None = None
     data_file_type_id: int | None = None
@@ -72,7 +80,7 @@ class Node(NodeBase):
     shell_function_id: int | None = None
 
 
-# --- Typed node creation helpers ---
+# --- Typed node models ---
 
 
 class DataFileNodeBase(NodeBase):
@@ -88,6 +96,7 @@ class DataFileNodeCreate(DataFileNodeBase):
     data_file_type_name: str | None = None
     data_file_type_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class DataFileNode(DataFileNodeBase):
@@ -99,6 +108,7 @@ class DataFileNode(DataFileNodeBase):
     id_: UUID
     data_file_type_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ConfigFileNodeBase(NodeBase):
@@ -114,6 +124,7 @@ class ConfigFileNodeCreate(ConfigFileNodeBase):
     config_file_type_name: str | None = None
     config_file_type_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ConfigFileNode(ConfigFileNodeBase):
@@ -125,6 +136,7 @@ class ConfigFileNode(ConfigFileNodeBase):
     id_: UUID
     config_file_type_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ConfigDictNodeBase(NodeBase):
@@ -140,6 +152,7 @@ class ConfigDictNodeCreate(ConfigDictNodeBase):
     config_dict_type_name: str | None = None
     config_dict_type_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ConfigDictNode(ConfigDictNodeBase):
@@ -151,21 +164,24 @@ class ConfigDictNode(ConfigDictNodeBase):
     id_: UUID
     config_dict_type_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ParameterNodeBase(NodeBase):
     """Model for a parameter node."""
 
     type_: Literal[NodeType.PARAMETER] = NodeType.PARAMETER
-    value_float: float = Field(..., description="The parameter value")
 
 
 class ParameterNodeCreate(ParameterNodeBase):
     """Fields used to create a ParameterNode."""
 
+    value_float: float | None = None
+    value_json: Any | None = None
     parameter_name: str | None = None
     parameter_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ParameterNode(ParameterNodeBase):
@@ -175,23 +191,27 @@ class ParameterNode(ParameterNodeBase):
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "value_float", "parameter_id"]
 
     id_: UUID
+    value_float: float | None = None
+    value_json: Any | None = None
     parameter_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ArrayNodeBase(NodeBase):
     """Model for an array node."""
 
     type_: Literal[NodeType.ARRAY] = NodeType.ARRAY
-    value_json: list[float] | list[list[float]] = Field(..., description="The array data as nested lists")
 
 
 class ArrayNodeCreate(ArrayNodeBase):
     """Fields used to create an ArrayNode."""
 
+    value_json: list[float] | list[list[float]] | None = None
     array_name: str | None = None
     array_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ArrayNode(ArrayNodeBase):
@@ -201,23 +221,26 @@ class ArrayNode(ArrayNodeBase):
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "array_id"]
 
     id_: UUID
+    value_json: list[float] | list[list[float]] | None = None
     array_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ObjectNodeBase(NodeBase):
     """Model for a python object node."""
 
     type_: Literal[NodeType.OBJECT] = NodeType.OBJECT
-    value_json: Any = Field(default=None, description="JSON-serializable representation of the object")
 
 
 class ObjectNodeCreate(ObjectNodeBase):
     """Fields used to create an ObjectNode."""
 
+    value_json: Any | None = None
     class_name: str | None = None
     class_id: int | None = None
     arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ObjectNode(ObjectNodeBase):
@@ -227,8 +250,10 @@ class ObjectNode(ObjectNodeBase):
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "class_id"]
 
     id_: UUID
+    value_json: Any | None = None
     class_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class PythonFunctionNodeBase(NodeBase):
@@ -242,6 +267,8 @@ class PythonFunctionNodeCreate(PythonFunctionNodeBase):
 
     python_function_name: str | None = None
     python_function_id: int | None = None
+    arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class PythonFunctionNode(PythonFunctionNodeBase):
@@ -253,6 +280,7 @@ class PythonFunctionNode(PythonFunctionNodeBase):
     id_: UUID
     python_function_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class MemberFunctionNodeBase(NodeBase):
@@ -266,6 +294,8 @@ class MemberFunctionNodeCreate(MemberFunctionNodeBase):
 
     member_function_name: str | None = None
     member_function_id: int | None = None
+    arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class MemberFunctionNode(MemberFunctionNodeBase):
@@ -277,6 +307,7 @@ class MemberFunctionNode(MemberFunctionNodeBase):
     id_: UUID
     member_function_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
 
 
 class ShellFunctionNodeBase(NodeBase):
@@ -290,6 +321,8 @@ class ShellFunctionNodeCreate(ShellFunctionNodeBase):
 
     shell_function_name: str | None = None
     shell_function_id: int | None = None
+    arg_name: str | None = None
+    execution_id: UUID | None = None
 
 
 class ShellFunctionNode(ShellFunctionNodeBase):
@@ -301,3 +334,18 @@ class ShellFunctionNode(ShellFunctionNodeBase):
     id_: UUID
     shell_function_id: int | None = None
     execution_id: UUID | None = None
+    arg_name: str | None = None
+
+
+AnyNode = Annotated[
+    DataFileNode
+    | ConfigFileNode
+    | ConfigDictNode
+    | ParameterNode
+    | ArrayNode
+    | ObjectNode
+    | PythonFunctionNode
+    | MemberFunctionNode
+    | ShellFunctionNode,
+    Field(discriminator="type_"),
+]

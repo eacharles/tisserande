@@ -10,7 +10,18 @@ from .data_types import (
 from .edges import EdgeTable
 from .execution import ExecutionTable
 from .function_types import MemberFunctionTable, PythonFunctionTable, ShellFunctionTable
-from .nodes import NodeTable
+from .nodes import (
+    ArrayNodeTable,
+    ConfigDictNodeTable,
+    ConfigFileNodeTable,
+    DataFileNodeTable,
+    MemberFunctionNodeTable,
+    NodeTable,
+    ObjectNodeTable,
+    ParameterNodeTable,
+    PythonFunctionNodeTable,
+    ShellFunctionNodeTable,
+)
 
 __all__ = [
     "Base",
@@ -27,6 +38,15 @@ __all__ = [
     "MemberFunctionTable",
     "ShellFunctionTable",
     "NodeTable",
+    "DataFileNodeTable",
+    "ConfigFileNodeTable",
+    "ConfigDictNodeTable",
+    "ParameterNodeTable",
+    "ArrayNodeTable",
+    "ObjectNodeTable",
+    "PythonFunctionNodeTable",
+    "MemberFunctionNodeTable",
+    "ShellFunctionNodeTable",
     "EdgeTable",
     "ExecutionTable",
 ]

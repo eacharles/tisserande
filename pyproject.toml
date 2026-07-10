@@ -22,6 +22,7 @@ authors = [
 ]
 
 dependencies = [
+    "tables-io",
     "macon[db]",
 ]
 
