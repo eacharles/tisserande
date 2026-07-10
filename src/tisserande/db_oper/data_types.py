@@ -7,31 +7,31 @@ from ..db import data_types as db
 class DataFileTypeOperations(
     TableOperations[db.DataFileTypeTable, models.DataFileType, models.DataFileTypeCreate]
 ):
-    pass
+    """Table operations for data file types."""
 
 
 class ConfigFileTypeOperations(
     TableOperations[db.ConfigFileTypeTable, models.ConfigFileType, models.ConfigFileTypeCreate],
 ):
-    pass
+    """Table operations for config file types."""
 
 
 class ConfigDictTypeOperations(
     TableOperations[db.ConfigDictTypeTable, models.ConfigDictType, models.ConfigDictTypeCreate],
 ):
-    pass
+    """Table operations for config dict types."""
 
 
 class ParameterOperations(TableOperations[db.ParameterTable, models.Parameter, models.ParameterCreate]):
-    pass
+    """Table operations for parameters."""
 
 
 class ArrayOperations(TableOperations[db.ArrayTable, models.Array, models.ArrayCreate]):
-    pass
+    """Table operations for arrays."""
 
 
 class ClassOperations(TableOperations[db.ClassTable, models.Class, models.ClassCreate]):
-    pass
+    """Table operations for Python classes."""
 
 
 data_file_type = DataFileTypeOperations(TableContext.from_db_class(db.DataFileTypeTable))

@@ -6,7 +6,7 @@ from ..db_oper.edges import edge as edge_ops
 
 
 class EdgeLocalOperations(LocalOperations[EdgeTable, models.Edge, models.EdgeCreate]):
-    pass
+    """Async session-managed operations for edges."""
 
 
 edge = EdgeLocalOperations(edge_ops)

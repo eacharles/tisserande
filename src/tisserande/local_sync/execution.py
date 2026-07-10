@@ -6,7 +6,7 @@ from ..local_async.execution import execution as execution_async
 
 
 class ExecutionSyncOperations(SyncOperations[ExecutionTable, models.Execution, models.ExecutionCreate]):
-    pass
+    """Synchronous operations for executions."""
 
 
 execution = ExecutionSyncOperations(execution_async)

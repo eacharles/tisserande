@@ -6,7 +6,7 @@ from ..local_async.edges import edge as edge_async
 
 
 class EdgeSyncOperations(SyncOperations[EdgeTable, models.Edge, models.EdgeCreate]):
-    pass
+    """Synchronous operations for edges."""
 
 
 edge = EdgeSyncOperations(edge_async)

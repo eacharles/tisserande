@@ -9,6 +9,8 @@ from ..models.types import ExecutionStatus
 
 
 class ExecutionOperations(TableOperations[ExecutionTable, models.Execution, models.ExecutionCreate]):
+    """Table operations for executions with status enum conversion."""
+
     async def get_create_kwargs(
         self,
         session: AsyncSession,

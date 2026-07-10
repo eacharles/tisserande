@@ -18,6 +18,8 @@ from .utils import uuid7 as _uuid7
 
 
 class NodeTable(Base):
+    """ORM table for all provenance graph node types."""
+
     __tablename__ = "node"
 
     id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)

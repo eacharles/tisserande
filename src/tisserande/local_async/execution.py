@@ -6,7 +6,7 @@ from ..db_oper.execution import execution as execution_ops
 
 
 class ExecutionLocalOperations(LocalOperations[ExecutionTable, models.Execution, models.ExecutionCreate]):
-    pass
+    """Async session-managed operations for executions."""
 
 
 execution = ExecutionLocalOperations(execution_ops)

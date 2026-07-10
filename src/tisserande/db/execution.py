@@ -13,6 +13,8 @@ from .utils import uuid7 as _uuid7
 
 
 class ExecutionTable(Base):
+    """ORM table for execution records."""
+
     __tablename__ = "execution"
 
     id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)

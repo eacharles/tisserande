@@ -9,6 +9,8 @@ from .base import Base
 
 
 class DataFileTypeTable(Base):
+    """ORM table for data file type definitions."""
+
     __tablename__ = "data_file_type"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -28,6 +30,8 @@ class DataFileTypeTable(Base):
 
 
 class ConfigFileTypeTable(Base):
+    """ORM table for config file type definitions."""
+
     __tablename__ = "config_file_type"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -47,6 +51,8 @@ class ConfigFileTypeTable(Base):
 
 
 class ConfigDictTypeTable(Base):
+    """ORM table for config dict type definitions."""
+
     __tablename__ = "config_dict_type"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -66,6 +72,8 @@ class ConfigDictTypeTable(Base):
 
 
 class ParameterTable(Base):
+    """ORM table for parameter definitions."""
+
     __tablename__ = "parameter"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -85,6 +93,8 @@ class ParameterTable(Base):
 
 
 class ArrayTable(Base):
+    """ORM table for array definitions."""
+
     __tablename__ = "array"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -106,6 +116,8 @@ class ArrayTable(Base):
 
 
 class ClassTable(Base):
+    """ORM table for Python class definitions."""
+
     __tablename__ = "class"
 
     id_: Mapped[int] = mapped_column(primary_key=True)

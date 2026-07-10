@@ -8,19 +8,19 @@ from ..db_oper import function_types as ops
 class PythonFunctionLocalOperations(
     LocalOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
 ):
-    pass
+    """Async session-managed operations for Python functions."""
 
 
 class MemberFunctionLocalOperations(
     LocalOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
 ):
-    pass
+    """Async session-managed operations for member functions."""
 
 
 class ShellFunctionLocalOperations(
     LocalOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
 ):
-    pass
+    """Async session-managed operations for shell functions."""
 
 
 python_function = PythonFunctionLocalOperations(ops.python_function)

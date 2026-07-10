@@ -4,6 +4,8 @@ import enum
 
 
 class NodeType(enum.Enum):
+    """Discriminator for the single-table node design."""
+
     DATA_FILE = "data_file"
     CONFIG_FILE = "config_file"
     CONFIG_DICT = "config_dict"
@@ -24,6 +26,8 @@ class NodeType(enum.Enum):
 
 
 class ExecutionStatus(enum.Enum):
+    """Lifecycle states for a tracked execution."""
+
     PENDING = "pending"
     RUNNING = "running"
     SUCCESS = "success"

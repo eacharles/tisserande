@@ -9,6 +9,8 @@ from .base import Base
 
 
 class PythonFunctionTable(Base):
+    """ORM table for Python function definitions."""
+
     __tablename__ = "python_function"
     __table_args__ = (UniqueConstraint("name", "module_", name="uq_python_function_name_module"),)
 
@@ -30,6 +32,8 @@ class PythonFunctionTable(Base):
 
 
 class MemberFunctionTable(Base):
+    """ORM table for class member function definitions."""
+
     __tablename__ = "member_function"
 
     id_: Mapped[int] = mapped_column(primary_key=True)
@@ -50,6 +54,8 @@ class MemberFunctionTable(Base):
 
 
 class ShellFunctionTable(Base):
+    """ORM table for shell function/script definitions."""
+
     __tablename__ = "shell_function"
 
     id_: Mapped[int] = mapped_column(primary_key=True)

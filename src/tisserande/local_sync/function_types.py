@@ -8,19 +8,19 @@ from ..local_async import function_types as async_ops
 class PythonFunctionSyncOperations(
     SyncOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
 ):
-    pass
+    """Synchronous operations for Python functions."""
 
 
 class MemberFunctionSyncOperations(
     SyncOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
 ):
-    pass
+    """Synchronous operations for member functions."""
 
 
 class ShellFunctionSyncOperations(
     SyncOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
 ):
-    pass
+    """Synchronous operations for shell functions."""
 
 
 python_function = PythonFunctionSyncOperations(async_ops.python_function)

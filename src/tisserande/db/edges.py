@@ -11,6 +11,8 @@ from .base import Base
 
 
 class EdgeTable(Base):
+    """ORM table for directed edges between nodes."""
+
     __tablename__ = "edge"
 
     id_: Mapped[int] = mapped_column(primary_key=True)

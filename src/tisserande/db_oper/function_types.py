@@ -13,12 +13,14 @@ from ..db import function_types as db
 class PythonFunctionOperations(
     TableOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
 ):
-    pass
+    """Table operations for Python functions."""
 
 
 class MemberFunctionOperations(
     TableOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
 ):
+    """Table operations for member functions with class FK resolution."""
+
     async def get_create_kwargs(
         self,
         session: AsyncSession,
@@ -38,7 +40,7 @@ class MemberFunctionOperations(
 class ShellFunctionOperations(
     TableOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
 ):
-    pass
+    """Table operations for shell functions."""
 
 
 python_function = PythonFunctionOperations(TableContext.from_db_class(db.PythonFunctionTable))
