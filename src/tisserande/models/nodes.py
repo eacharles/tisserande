@@ -23,28 +23,14 @@ class NodeBase(BaseModel):
 
 
 class Node(NodeBase):
-    """Node response model."""
+    """Node response model — base table columns only."""
 
     model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "arg_name", "execution_id"]
 
     id_: UUID
     execution_id: UUID | None = None
-    path: str | None = None
-    config_data: dict[str, Any] | None = None
-    value_float: float | None = None
-    value_json: Any | None = None
     arg_name: str | None = None
-
-    data_file_type_id: int | None = None
-    config_file_type_id: int | None = None
-    config_dict_type_id: int | None = None
-    parameter_id: int | None = None
-    array_id: int | None = None
-    class_id: int | None = None
-    python_function_id: int | None = None
-    member_function_id: int | None = None
-    shell_function_id: int | None = None
 
 
 # --- Typed node models ---

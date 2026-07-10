@@ -47,6 +47,38 @@ def _classify_by_value(value: Any) -> NodeType:
     return NodeType.OBJECT
 
 
+def build_node_kwargs(
+    param_name: str,
+    node_type: NodeType,
+    value: Any,
+) -> dict[str, Any]:
+    """Build kwargs dict for creating a Node row."""
+    kwargs: dict[str, Any] = {
+        "type_": node_type,
+        "arg_name": param_name,
+    }
+
+    if node_type == NodeType.DATA_FILE:
+        kwargs["path"] = str(value)
+    elif node_type == NodeType.CONFIG_FILE:
+        kwargs["path"] = str(value)
+    elif node_type == NodeType.CONFIG_DICT:
+        kwargs["config_data"] = value
+    elif node_type == NodeType.PARAMETER:
+        kwargs["value_float"] = float(value) if isinstance(value, (int, float)) else None
+        if kwargs["value_float"] is None:
+            kwargs["value_json"] = value
+    elif node_type == NodeType.ARRAY:
+        kwargs["value_json"] = list(value) if not isinstance(value, list) else value
+    elif node_type == NodeType.OBJECT:
+        try:
+            kwargs["value_json"] = value
+        except (TypeError, ValueError):  # pragma: no cover
+            kwargs["value_json"] = str(value)
+
+    return kwargs
+
+
 class ArgumentInspector:
     """Inspects function signatures and runtime args to create node specifications."""
 
@@ -101,30 +133,7 @@ class ArgumentInspector:
         value: Any,
     ) -> dict[str, Any]:
         """Build kwargs dict for creating a Node row."""
-        kwargs: dict[str, Any] = {
-            "type_": node_type,
-            "arg_name": param_name,
-        }
-
-        if node_type == NodeType.DATA_FILE:
-            kwargs["path"] = str(value)
-        elif node_type == NodeType.CONFIG_FILE:
-            kwargs["path"] = str(value)
-        elif node_type == NodeType.CONFIG_DICT:
-            kwargs["config_data"] = value
-        elif node_type == NodeType.PARAMETER:
-            kwargs["value_float"] = float(value) if isinstance(value, (int, float)) else None
-            if kwargs["value_float"] is None:
-                kwargs["value_json"] = value
-        elif node_type == NodeType.ARRAY:
-            kwargs["value_json"] = list(value) if not isinstance(value, list) else value
-        elif node_type == NodeType.OBJECT:
-            try:
-                kwargs["value_json"] = value
-            except (TypeError, ValueError):  # pragma: no cover
-                kwargs["value_json"] = str(value)
-
-        return kwargs
+        return build_node_kwargs(param_name, node_type, value)
 
     def build_input_specs(
         self,

@@ -56,4 +56,12 @@ class Configuration(BaseSettings):
     tracking: TrackingConfiguration = TrackingConfiguration()
 
 
-config = Configuration()
+_config: Configuration | None = None
+
+
+def get_config() -> Configuration:
+    """Get the configuration, creating it lazily on first access."""
+    global _config
+    if _config is None:
+        _config = Configuration()
+    return _config

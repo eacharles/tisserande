@@ -64,8 +64,8 @@ class TrackingContext:
         exception: BaseException | None = None,
     ) -> None:
         """Create output nodes + output edges, update Execution with timing/status."""
-        assert self._execution_id is not None
-        assert self._function_node_id is not None
+        if self._execution_id is None or self._function_node_id is None:
+            raise RuntimeError("finish_execution called before start_execution")
 
         elapsed = time.time() - self._start_time
 
@@ -74,6 +74,7 @@ class TrackingContext:
                 self._execution_id,
                 status=ExecutionStatus.FAILURE,
                 duration_seconds=elapsed,
+                end_time=datetime.now(UTC),
                 error_message=str(exception),
                 error_traceback=traceback.format_exc(),
             )
@@ -93,4 +94,5 @@ class TrackingContext:
             self._execution_id,
             status=ExecutionStatus.SUCCESS,
             duration_seconds=elapsed,
+            end_time=datetime.now(UTC),
         )

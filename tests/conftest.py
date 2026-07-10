@@ -2,7 +2,8 @@ import asyncio
 
 import pytest
 
-from tisserande.db.base import Base, init_db
+from tisserande.db.base import Base, close_db, init_db
+from tisserande.tracking.decorator import reset as reset_tracking
 
 DB_URL = "sqlite+aiosqlite://"
 
@@ -10,6 +11,7 @@ DB_URL = "sqlite+aiosqlite://"
 @pytest.fixture(autouse=True)
 def _setup_db():
     """Initialize DB for each test with in-memory SQLite."""
+    asyncio.run(close_db())
     init_db(DB_URL)
 
     async def _create_tables():
@@ -21,3 +23,5 @@ def _setup_db():
 
     asyncio.run(_create_tables())
     yield
+    reset_tracking()
+    asyncio.run(close_db())
