@@ -31,7 +31,11 @@ class Execution(ExecutionBase):
 
     model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = [
-        "id_", "function_node_id", "status", "start_time", "duration_seconds",
+        "id_",
+        "function_node_id",
+        "status",
+        "start_time",
+        "duration_seconds",
     ]
 
     id_: UUID

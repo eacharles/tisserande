@@ -1,13 +1,13 @@
 """End-to-end test with real database backend."""
 
+import pytest
+
 from tisserande.models.types import ExecutionStatus, NodeType
-from tisserande.tracking import configure, track, track_shell
+from tisserande.tracking import configure, track, track_async, track_shell
 from tisserande.tracking.annotations import DataFile, Param
-from tisserande.tracking.backends import LocalSyncBackend
 
 
 class TestFullStack:
-
     def setup_method(self):
         configure(db_url="sqlite+aiosqlite://")
 
@@ -43,7 +43,6 @@ class TestFullStack:
         def fail_func(x: Param[float]) -> float:
             raise RuntimeError("something went wrong")
 
-        import pytest
         with pytest.raises(RuntimeError, match="something went wrong"):
             fail_func(1.0)
 
@@ -71,3 +70,51 @@ class TestFullStack:
         nodes_list = node.get_rows()
         shell_nodes = [n for n in nodes_list if n.type_ == NodeType.SHELL_FUNCTION]
         assert len(shell_nodes) >= 1
+
+    @pytest.mark.asyncio
+    async def test_track_async_creates_provenance(self):
+        from tisserande.tracking.backends import NullBackend
+
+        backend = NullBackend()
+
+        @track_async(backend=backend)
+        async def fetch_data(url: DataFile[str], max_wait: Param[float]) -> DataFile[str]:
+            return "/tmp/downloaded.fits"
+
+        result = await fetch_data("https://example.com/data.fits", 30.0)
+        assert result == "/tmp/downloaded.fits"
+
+    @pytest.mark.asyncio
+    async def test_track_async_exception(self):
+        from tisserande.tracking.backends import NullBackend
+
+        backend = NullBackend()
+
+        @track_async(backend=backend)
+        async def fail_async(x: Param[float]) -> float:
+            raise RuntimeError("async error")
+
+        with pytest.raises(RuntimeError, match="async error"):
+            await fail_async(1.0)
+
+    def test_track_shell_failure_with_inputs(self):
+        result = track_shell(
+            "false",
+            inputs={"input_file": "/tmp/data.fits", "threshold": 0.5},
+        )
+        assert result.returncode != 0
+
+        from tisserande.local_sync import edge, execution, node
+
+        executions = execution.get_rows()
+        failed = [e for e in executions if e.status == ExecutionStatus.FAILURE]
+        assert len(failed) >= 1
+
+        nodes_list = node.get_rows()
+        shell_nodes = [n for n in nodes_list if n.type_ == NodeType.SHELL_FUNCTION]
+        assert len(shell_nodes) >= 1
+        input_nodes = [n for n in nodes_list if n.type_ in (NodeType.DATA_FILE, NodeType.PARAMETER)]
+        assert len(input_nodes) >= 2
+
+        edges_list = edge.get_rows()
+        assert len(edges_list) >= 2

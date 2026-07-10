@@ -18,13 +18,19 @@ _TYPE_FK_MAP: dict[str, tuple[str, str, type]] = {
     NodeType.ARRAY.value: ("array_name", "array_id", db_data.ArrayTable),
     NodeType.OBJECT.value: ("class_name", "class_id", db_data.ClassTable),
     NodeType.PYTHON_FUNCTION.value: (
-        "python_function_name", "python_function_id", db_func.PythonFunctionTable,
+        "python_function_name",
+        "python_function_id",
+        db_func.PythonFunctionTable,
     ),
     NodeType.MEMBER_FUNCTION.value: (
-        "member_function_name", "member_function_id", db_func.MemberFunctionTable,
+        "member_function_name",
+        "member_function_id",
+        db_func.MemberFunctionTable,
     ),
     NodeType.SHELL_FUNCTION.value: (
-        "shell_function_name", "shell_function_id", db_func.ShellFunctionTable,
+        "shell_function_name",
+        "shell_function_id",
+        db_func.ShellFunctionTable,
     ),
 }
 
@@ -48,7 +54,10 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.NodeCreate])
             id_val = kwargs.get(id_field)
             if name_val and not id_val:
                 resolved_id, _ = await db_funcs.read.lookup_by_id_or_name(
-                    db_class, session, None, name_val,
+                    db_class,
+                    session,
+                    None,
+                    name_val,
                 )
                 kwargs[id_field] = resolved_id
 

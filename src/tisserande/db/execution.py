@@ -9,11 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .. import models
 from .base import Base
-
-
-def _uuid7() -> uuid.UUID:
-    import uuid_utils
-    return uuid.UUID(str(uuid_utils.uuid7()))
+from .utils import uuid7 as _uuid7
 
 
 class ExecutionTable(Base):
@@ -21,7 +17,8 @@ class ExecutionTable(Base):
 
     id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
     function_node_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("node.id_"), nullable=True,
+        ForeignKey("node.id_"),
+        nullable=True,
     )
     status: Mapped[str] = mapped_column(String(20), default="pending")
     start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

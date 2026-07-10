@@ -1,21 +1,19 @@
 """Tests for the tracking decorator with NullBackend."""
 
-import uuid
-
 from tisserande.tracking import configure, track, track_shell
-from tisserande.tracking.annotations import DataFile, Param, Untracked
+from tisserande.tracking.annotations import DataFile, Param
 from tisserande.tracking.backends import NullBackend
 from tisserande.tracking.inspector import ArgumentInspector
 
 
 class TestArgumentInspector:
-
     def test_classify_float(self):
         def fn(x: float) -> float:
             return x
 
         inspector = ArgumentInspector(fn)
         from tisserande.models.types import NodeType
+
         assert inspector.classify_argument("x", 3.14) == NodeType.PARAMETER
 
     def test_classify_path(self):
@@ -24,6 +22,7 @@ class TestArgumentInspector:
 
         inspector = ArgumentInspector(fn)
         from tisserande.models.types import NodeType
+
         assert inspector.classify_argument("path", "/tmp/data.fits") == NodeType.DATA_FILE
 
     def test_classify_dict(self):
@@ -32,6 +31,7 @@ class TestArgumentInspector:
 
         inspector = ArgumentInspector(fn)
         from tisserande.models.types import NodeType
+
         assert inspector.classify_argument("cfg", {"key": "val"}) == NodeType.CONFIG_DICT
 
     def test_build_input_specs(self):
@@ -63,7 +63,6 @@ class TestArgumentInspector:
 
 
 class TestTrackDecorator:
-
     def setup_method(self):
         self.backend = NullBackend()
 
@@ -88,6 +87,7 @@ class TestTrackDecorator:
             raise ValueError("test error")
 
         import pytest
+
         with pytest.raises(ValueError, match="test error"):
             fail()
 
@@ -110,7 +110,6 @@ class TestTrackDecorator:
 
 
 class TestTrackShell:
-
     def setup_method(self):
         self.backend = NullBackend()
 

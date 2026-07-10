@@ -4,7 +4,9 @@ from .. import models
 from ..db import data_types as db
 
 
-class DataFileTypeOperations(TableOperations[db.DataFileTypeTable, models.DataFileType, models.DataFileTypeCreate]):
+class DataFileTypeOperations(
+    TableOperations[db.DataFileTypeTable, models.DataFileType, models.DataFileTypeCreate]
+):
     pass
 
 

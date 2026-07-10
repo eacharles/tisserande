@@ -5,9 +5,7 @@ import uuid
 from tisserande.models import (
     DataFileType,
     DataFileTypeCreate,
-    Edge,
     EdgeCreate,
-    Execution,
     ExecutionCreate,
     NodeCreate,
     PythonFunction,
@@ -17,7 +15,6 @@ from tisserande.models.types import ExecutionStatus, NodeType
 
 
 class TestNodeType:
-
     def test_data_types(self):
         assert NodeType.DATA_FILE.is_data
         assert NodeType.CONFIG_FILE.is_data
@@ -31,7 +28,6 @@ class TestNodeType:
 
 
 class TestDataFileType:
-
     def test_create(self):
         obj = DataFileTypeCreate(name="fits")
         assert obj.name == "fits"
@@ -43,7 +39,6 @@ class TestDataFileType:
 
 
 class TestPythonFunction:
-
     def test_create(self):
         obj = PythonFunctionCreate(name="process", module_="mymodule")
         assert obj.name == "process"
@@ -55,7 +50,6 @@ class TestPythonFunction:
 
 
 class TestNodeCreate:
-
     def test_data_file_node(self):
         obj = NodeCreate(type_=NodeType.DATA_FILE, path="/tmp/data.fits")
         assert obj.type_ == NodeType.DATA_FILE
@@ -67,7 +61,6 @@ class TestNodeCreate:
 
 
 class TestEdge:
-
     def test_create(self):
         u1 = uuid.uuid4()
         u2 = uuid.uuid4()
@@ -77,7 +70,6 @@ class TestEdge:
 
 
 class TestExecution:
-
     def test_create(self):
         obj = ExecutionCreate(status=ExecutionStatus.RUNNING)
         assert obj.status == ExecutionStatus.RUNNING

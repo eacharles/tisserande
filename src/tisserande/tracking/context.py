@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import time
 import traceback
-from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
@@ -32,11 +32,12 @@ class TrackingContext:
         self._start_time = time.time()
 
         self._execution_id = self._backend.create_execution(
-            status=ExecutionStatus.RUNNING.value,
+            status=ExecutionStatus.RUNNING,
+            start_time=datetime.now(UTC),
         )
 
         self._function_node_id = self._backend.create_node(
-            type_=NodeType.PYTHON_FUNCTION.value,
+            type_=NodeType.PYTHON_FUNCTION,
             execution_id=self._execution_id,
             arg_name=None,
         )
@@ -71,7 +72,7 @@ class TrackingContext:
         if exception is not None:
             self._backend.update_execution(
                 self._execution_id,
-                status=ExecutionStatus.FAILURE.value,
+                status=ExecutionStatus.FAILURE,
                 duration_seconds=elapsed,
                 error_message=str(exception),
                 error_traceback=traceback.format_exc(),
@@ -90,6 +91,6 @@ class TrackingContext:
 
         self._backend.update_execution(
             self._execution_id,
-            status=ExecutionStatus.SUCCESS.value,
+            status=ExecutionStatus.SUCCESS,
             duration_seconds=elapsed,
         )

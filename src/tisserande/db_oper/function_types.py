@@ -27,7 +27,10 @@ class MemberFunctionOperations(
         **kwargs: Any,
     ) -> dict[str, Any]:
         class_id, _ = await db_funcs.read.lookup_by_id_or_name(
-            db_data.ClassTable, session, class_id, class_name,
+            db_data.ClassTable,
+            session,
+            class_id,
+            class_name,
         )
         return {"class_id": class_id, **kwargs}
 

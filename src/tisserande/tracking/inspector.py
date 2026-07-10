@@ -25,6 +25,13 @@ def _classify_by_value(value: Any) -> NodeType:
     """Classify a value into a NodeType using heuristics."""
     if isinstance(value, (int, float)) and not isinstance(value, bool):
         return NodeType.PARAMETER
+    try:
+        import numpy as np
+
+        if isinstance(value, np.ndarray):
+            return NodeType.ARRAY
+    except ImportError:  # pragma: no cover
+        pass
     if isinstance(value, str):
         if os.path.sep in value or value.endswith((".fits", ".hdf5", ".parquet", ".csv", ".npy")):
             return NodeType.DATA_FILE
@@ -88,11 +95,14 @@ class ArgumentInspector:
         return _classify_by_value(value)
 
     def build_node_kwargs(
-        self, param_name: str, node_type: NodeType, value: Any,
+        self,
+        param_name: str,
+        node_type: NodeType,
+        value: Any,
     ) -> dict[str, Any]:
         """Build kwargs dict for creating a Node row."""
         kwargs: dict[str, Any] = {
-            "type_": node_type.value,
+            "type_": node_type,
             "arg_name": param_name,
         }
 
@@ -111,17 +121,18 @@ class ArgumentInspector:
         elif node_type == NodeType.OBJECT:
             try:
                 kwargs["value_json"] = value
-            except (TypeError, ValueError):
+            except (TypeError, ValueError):  # pragma: no cover
                 kwargs["value_json"] = str(value)
 
         return kwargs
 
     def build_input_specs(
-        self, args: tuple[Any, ...], kwargs: dict[str, Any],
+        self,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
     ) -> list[dict[str, Any]]:
         """Build node creation specs for all tracked input arguments."""
         specs: list[dict[str, Any]] = []
-        params = list(self._sig.parameters.values())
 
         bound = self._sig.bind(*args, **kwargs)
         bound.apply_defaults()
@@ -153,9 +164,9 @@ class ArgumentInspector:
                 specs.append(spec)
             return specs
 
-        node_type = self.classify_return(result)
-        if node_type is None:
+        return_type = self.classify_return(result)
+        if return_type is None:
             return []
 
-        spec = self.build_node_kwargs("return", node_type, result)
+        spec = self.build_node_kwargs("return", return_type, result)
         return [spec]

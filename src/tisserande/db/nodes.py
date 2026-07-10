@@ -14,11 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .. import models
 from .base import Base
-
-
-def _uuid7() -> uuid.UUID:
-    import uuid_utils
-    return uuid.UUID(str(uuid_utils.uuid7()))
+from .utils import uuid7 as _uuid7
 
 
 class NodeTable(Base):
@@ -27,7 +23,9 @@ class NodeTable(Base):
     id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
     type_: Mapped[str] = mapped_column(String(50), index=True)
     execution_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("execution.id_"), nullable=True, index=True,
+        ForeignKey("execution.id_"),
+        nullable=True,
+        index=True,
     )
 
     path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
@@ -37,31 +35,40 @@ class NodeTable(Base):
     arg_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     data_file_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("data_file_type.id_"), nullable=True,
+        ForeignKey("data_file_type.id_"),
+        nullable=True,
     )
     config_file_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("config_file_type.id_"), nullable=True,
+        ForeignKey("config_file_type.id_"),
+        nullable=True,
     )
     config_dict_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("config_dict_type.id_"), nullable=True,
+        ForeignKey("config_dict_type.id_"),
+        nullable=True,
     )
     parameter_id: Mapped[int | None] = mapped_column(
-        ForeignKey("parameter.id_"), nullable=True,
+        ForeignKey("parameter.id_"),
+        nullable=True,
     )
     array_id: Mapped[int | None] = mapped_column(
-        ForeignKey("array.id_"), nullable=True,
+        ForeignKey("array.id_"),
+        nullable=True,
     )
     class_id: Mapped[int | None] = mapped_column(
-        ForeignKey("class.id_"), nullable=True,
+        ForeignKey("class.id_"),
+        nullable=True,
     )
     python_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("python_function.id_"), nullable=True,
+        ForeignKey("python_function.id_"),
+        nullable=True,
     )
     member_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("member_function.id_"), nullable=True,
+        ForeignKey("member_function.id_"),
+        nullable=True,
     )
     shell_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("shell_function.id_"), nullable=True,
+        ForeignKey("shell_function.id_"),
+        nullable=True,
     )
 
     @classmethod

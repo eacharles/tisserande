@@ -1,7 +1,6 @@
 import asyncio
 
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from tisserande.db.base import Base, init_db
 
@@ -15,6 +14,7 @@ def _setup_db():
 
     async def _create_tables():
         from macon.db.session import get_session
+
         async with get_session() as session:
             conn = await session.connection()
             await conn.run_sync(Base.metadata.create_all)

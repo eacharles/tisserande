@@ -17,7 +17,9 @@ class EdgeTable(Base):
     from_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), index=True)
     to_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), index=True)
     execution_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("execution.id_"), nullable=True, index=True,
+        ForeignKey("execution.id_"),
+        nullable=True,
+        index=True,
     )
 
     @classmethod

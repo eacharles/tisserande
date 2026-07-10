@@ -10,7 +10,7 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Any, TypeVar, overload
 
-from .backends import LocalSyncBackend, NullBackend, TrackingBackend
+from .backends import LocalSyncBackend, TrackingBackend
 from .context import TrackingContext
 from .inspector import ArgumentInspector
 
@@ -58,6 +58,12 @@ def configure(
 def get_backend() -> TrackingBackend | None:
     """Get the currently configured backend."""
     return _default_backend
+
+
+def reset() -> None:
+    """Reset the tracking system, clearing the configured backend."""
+    global _default_backend
+    _default_backend = None
 
 
 @overload
@@ -123,7 +129,7 @@ def track(
 
     if func is not None:
         return decorator(func)
-    return decorator  # type: ignore[return-value]
+    return decorator
 
 
 @overload
@@ -181,7 +187,7 @@ def track_async(
 
     if func is not None:
         return decorator(func)
-    return decorator  # type: ignore[return-value]
+    return decorator
 
 
 def track_shell(
@@ -202,21 +208,30 @@ def track_shell(
     outputs
         Dict mapping output names to values (tracked as output data nodes)
     """
-    from ..models.types import NodeType
+    from datetime import UTC, datetime
+
+    from ..models.types import ExecutionStatus, NodeType
 
     be = backend or _default_backend
 
     if be is None:
         return subprocess.run(
-            command, shell=isinstance(command, str), capture_output=True, text=True, check=False,
+            command,
+            shell=isinstance(command, str),
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
     from .inspector import _classify_by_value
 
-    execution_id = be.create_execution(status="running")
+    execution_id = be.create_execution(
+        status=ExecutionStatus.RUNNING,
+        start_time=datetime.now(UTC),
+    )
 
     function_node_id = be.create_node(
-        type_=NodeType.SHELL_FUNCTION.value,
+        type_=NodeType.SHELL_FUNCTION,
         execution_id=execution_id,
         arg_name=None,
     )
@@ -226,7 +241,11 @@ def track_shell(
     if inputs:
         for name, value in inputs.items():
             node_type = _classify_by_value(value)
-            kwargs: dict[str, Any] = {"type_": node_type.value, "arg_name": name, "execution_id": execution_id}
+            kwargs: dict[str, Any] = {
+                "type_": node_type,
+                "arg_name": name,
+                "execution_id": execution_id,
+            }
             if node_type in (NodeType.DATA_FILE, NodeType.CONFIG_FILE):
                 kwargs["path"] = str(value)
             elif node_type == NodeType.CONFIG_DICT:
@@ -239,16 +258,21 @@ def track_shell(
             be.create_edge(from_id=input_node_id, to_id=function_node_id, execution_id=execution_id)
 
     import time
+
     start = time.time()
     result = subprocess.run(
-        command, shell=isinstance(command, str), capture_output=True, text=True, check=False,
+        command,
+        shell=isinstance(command, str),
+        capture_output=True,
+        text=True,
+        check=False,
     )
     elapsed = time.time() - start
 
     if result.returncode != 0:
         be.update_execution(
             execution_id,
-            status="failure",
+            status=ExecutionStatus.FAILURE,
             duration_seconds=elapsed,
             error_message=result.stderr or f"Exit code {result.returncode}",
         )
@@ -257,7 +281,7 @@ def track_shell(
     if outputs:
         for name, value in outputs.items():
             node_type = _classify_by_value(value)
-            kwargs = {"type_": node_type.value, "arg_name": name, "execution_id": execution_id}
+            kwargs = {"type_": node_type, "arg_name": name, "execution_id": execution_id}
             if node_type in (NodeType.DATA_FILE, NodeType.CONFIG_FILE):
                 kwargs["path"] = str(value)
             elif node_type == NodeType.CONFIG_DICT:
@@ -269,5 +293,5 @@ def track_shell(
             output_node_id = be.create_node(**kwargs)
             be.create_edge(from_id=function_node_id, to_id=output_node_id, execution_id=execution_id)
 
-    be.update_execution(execution_id, status="success", duration_seconds=elapsed)
+    be.update_execution(execution_id, status=ExecutionStatus.SUCCESS, duration_seconds=elapsed)
     return result

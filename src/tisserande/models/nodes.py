@@ -18,9 +18,13 @@ class NodeCreate(NodeBase):
     """Generic node creation model."""
 
     path: str | None = Field(default=None, description="File path (for file nodes)")
-    config_data: dict[str, Any] | None = Field(default=None, description="Config data (for config dict nodes)")
+    config_data: dict[str, Any] | None = Field(
+        default=None, description="Config data (for config dict nodes)"
+    )
     value_float: float | None = Field(default=None, description="Float value (for parameter nodes)")
-    value_json: Any | None = Field(default=None, description="JSON-serializable value (for array/object nodes)")
+    value_json: Any | None = Field(
+        default=None, description="JSON-serializable value (for array/object nodes)"
+    )
     arg_name: str | None = Field(default=None, description="Argument name in function signature")
 
     data_file_type_name: str | None = None
