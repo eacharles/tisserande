@@ -1,0 +1,23 @@
+import asyncio
+
+import pytest
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+from tisserande.db.base import Base, init_db
+
+DB_URL = "sqlite+aiosqlite://"
+
+
+@pytest.fixture(autouse=True)
+def _setup_db():
+    """Initialize DB for each test with in-memory SQLite."""
+    init_db(DB_URL)
+
+    async def _create_tables():
+        from macon.db.session import get_session
+        async with get_session() as session:
+            conn = await session.connection()
+            await conn.run_sync(Base.metadata.create_all)
+
+    asyncio.run(_create_tables())
+    yield
