@@ -1,5 +1,7 @@
 # tisserande
 
+![Tisserande logo](docs/figures/tisserand_logo_big.jpg)
+
 Execution provenance tracking for Python functions and shell scripts.
 
 Tisserande records **what** functions ran, **what** data they consumed and produced, **how long** they took, and **whether** they succeeded — all as a directed acyclic graph (DAG) stored in a database.
