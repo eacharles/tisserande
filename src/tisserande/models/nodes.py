@@ -83,6 +83,23 @@ class Node(NodeBase):
 # --- Typed node models ---
 
 
+class _TypedNodeCreateMixin(BaseModel):
+    """Common fields for all typed node creation models."""
+
+    arg_name: str | None = None
+    execution_id: UUID | None = None
+
+
+class _TypedNodeResponseMixin(BaseModel):
+    """Common fields for all typed node response models."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id_: UUID
+    execution_id: UUID | None = None
+    arg_name: str | None = None
+
+
 class DataFileNodeBase(NodeBase):
     """Model for a data file node."""
 
@@ -90,25 +107,19 @@ class DataFileNodeBase(NodeBase):
     path: str = Field(..., description="Path to the data file")
 
 
-class DataFileNodeCreate(DataFileNodeBase):
+class DataFileNodeCreate(DataFileNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a DataFileNode."""
 
     data_file_type_name: str | None = None
     data_file_type_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class DataFileNode(DataFileNodeBase):
+class DataFileNode(DataFileNodeBase, _TypedNodeResponseMixin):
     """DataFileNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "path", "data_file_type_id"]
 
-    id_: UUID
     data_file_type_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ConfigFileNodeBase(NodeBase):
@@ -118,25 +129,19 @@ class ConfigFileNodeBase(NodeBase):
     path: str = Field(..., description="Path to the config file")
 
 
-class ConfigFileNodeCreate(ConfigFileNodeBase):
+class ConfigFileNodeCreate(ConfigFileNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a ConfigFileNode."""
 
     config_file_type_name: str | None = None
     config_file_type_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ConfigFileNode(ConfigFileNodeBase):
+class ConfigFileNode(ConfigFileNodeBase, _TypedNodeResponseMixin):
     """ConfigFileNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "path", "config_file_type_id"]
 
-    id_: UUID
     config_file_type_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ConfigDictNodeBase(NodeBase):
@@ -146,25 +151,19 @@ class ConfigDictNodeBase(NodeBase):
     config_data: dict[str, Any] = Field(..., description="Configuration data")
 
 
-class ConfigDictNodeCreate(ConfigDictNodeBase):
+class ConfigDictNodeCreate(ConfigDictNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a ConfigDictNode."""
 
     config_dict_type_name: str | None = None
     config_dict_type_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ConfigDictNode(ConfigDictNodeBase):
+class ConfigDictNode(ConfigDictNodeBase, _TypedNodeResponseMixin):
     """ConfigDictNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "config_dict_type_id"]
 
-    id_: UUID
     config_dict_type_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ParameterNodeBase(NodeBase):
@@ -173,29 +172,23 @@ class ParameterNodeBase(NodeBase):
     type_: Literal[NodeType.PARAMETER] = NodeType.PARAMETER
 
 
-class ParameterNodeCreate(ParameterNodeBase):
+class ParameterNodeCreate(ParameterNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a ParameterNode."""
 
     value_float: float | None = None
     value_json: Any | None = None
     parameter_name: str | None = None
     parameter_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ParameterNode(ParameterNodeBase):
+class ParameterNode(ParameterNodeBase, _TypedNodeResponseMixin):
     """ParameterNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "value_float", "parameter_id"]
 
-    id_: UUID
     value_float: float | None = None
     value_json: Any | None = None
     parameter_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ArrayNodeBase(NodeBase):
@@ -204,27 +197,21 @@ class ArrayNodeBase(NodeBase):
     type_: Literal[NodeType.ARRAY] = NodeType.ARRAY
 
 
-class ArrayNodeCreate(ArrayNodeBase):
+class ArrayNodeCreate(ArrayNodeBase, _TypedNodeCreateMixin):
     """Fields used to create an ArrayNode."""
 
     value_json: list[float] | list[list[float]] | None = None
     array_name: str | None = None
     array_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ArrayNode(ArrayNodeBase):
+class ArrayNode(ArrayNodeBase, _TypedNodeResponseMixin):
     """ArrayNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "array_id"]
 
-    id_: UUID
     value_json: list[float] | list[list[float]] | None = None
     array_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ObjectNodeBase(NodeBase):
@@ -233,27 +220,21 @@ class ObjectNodeBase(NodeBase):
     type_: Literal[NodeType.OBJECT] = NodeType.OBJECT
 
 
-class ObjectNodeCreate(ObjectNodeBase):
+class ObjectNodeCreate(ObjectNodeBase, _TypedNodeCreateMixin):
     """Fields used to create an ObjectNode."""
 
     value_json: Any | None = None
     class_name: str | None = None
     class_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ObjectNode(ObjectNodeBase):
+class ObjectNode(ObjectNodeBase, _TypedNodeResponseMixin):
     """ObjectNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "class_id"]
 
-    id_: UUID
     value_json: Any | None = None
     class_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class PythonFunctionNodeBase(NodeBase):
@@ -262,25 +243,19 @@ class PythonFunctionNodeBase(NodeBase):
     type_: Literal[NodeType.PYTHON_FUNCTION] = NodeType.PYTHON_FUNCTION
 
 
-class PythonFunctionNodeCreate(PythonFunctionNodeBase):
+class PythonFunctionNodeCreate(PythonFunctionNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a PythonFunctionNode."""
 
     python_function_name: str | None = None
     python_function_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class PythonFunctionNode(PythonFunctionNodeBase):
+class PythonFunctionNode(PythonFunctionNodeBase, _TypedNodeResponseMixin):
     """PythonFunctionNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "python_function_id"]
 
-    id_: UUID
     python_function_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class MemberFunctionNodeBase(NodeBase):
@@ -289,25 +264,19 @@ class MemberFunctionNodeBase(NodeBase):
     type_: Literal[NodeType.MEMBER_FUNCTION] = NodeType.MEMBER_FUNCTION
 
 
-class MemberFunctionNodeCreate(MemberFunctionNodeBase):
+class MemberFunctionNodeCreate(MemberFunctionNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a MemberFunctionNode."""
 
     member_function_name: str | None = None
     member_function_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class MemberFunctionNode(MemberFunctionNodeBase):
+class MemberFunctionNode(MemberFunctionNodeBase, _TypedNodeResponseMixin):
     """MemberFunctionNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "member_function_id"]
 
-    id_: UUID
     member_function_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 class ShellFunctionNodeBase(NodeBase):
@@ -316,25 +285,19 @@ class ShellFunctionNodeBase(NodeBase):
     type_: Literal[NodeType.SHELL_FUNCTION] = NodeType.SHELL_FUNCTION
 
 
-class ShellFunctionNodeCreate(ShellFunctionNodeBase):
+class ShellFunctionNodeCreate(ShellFunctionNodeBase, _TypedNodeCreateMixin):
     """Fields used to create a ShellFunctionNode."""
 
     shell_function_name: str | None = None
     shell_function_id: int | None = None
-    arg_name: str | None = None
-    execution_id: UUID | None = None
 
 
-class ShellFunctionNode(ShellFunctionNodeBase):
+class ShellFunctionNode(ShellFunctionNodeBase, _TypedNodeResponseMixin):
     """ShellFunctionNode response model."""
 
-    model_config = ConfigDict(from_attributes=True)
     col_names_for_table: ClassVar[list[str]] = ["id_", "type_", "shell_function_id"]
 
-    id_: UUID
     shell_function_id: int | None = None
-    execution_id: UUID | None = None
-    arg_name: str | None = None
 
 
 AnyNode = Annotated[
