@@ -36,10 +36,10 @@ def configure(
         _default_backend = backend
         return
 
-    from ..config import config
+    from ..config import get_config
     from ..db.base import Base, init_db
 
-    url = db_url or config.db.url
+    url = db_url or get_config().db.url
     init_db(url)
 
     import asyncio
@@ -223,7 +223,7 @@ def track_shell(
             check=False,
         )
 
-    from .inspector import _classify_by_value
+    from .inspector import _classify_by_value, build_node_kwargs
 
     execution_id = be.create_execution(
         status=ExecutionStatus.RUNNING,
@@ -241,19 +241,8 @@ def track_shell(
     if inputs:
         for name, value in inputs.items():
             node_type = _classify_by_value(value)
-            kwargs: dict[str, Any] = {
-                "type_": node_type,
-                "arg_name": name,
-                "execution_id": execution_id,
-            }
-            if node_type in (NodeType.DATA_FILE, NodeType.CONFIG_FILE):
-                kwargs["path"] = str(value)
-            elif node_type == NodeType.CONFIG_DICT:
-                kwargs["config_data"] = value
-            elif node_type == NodeType.PARAMETER:
-                kwargs["value_float"] = float(value) if isinstance(value, (int, float)) else None
-            else:
-                kwargs["value_json"] = value
+            kwargs = build_node_kwargs(name, node_type, value)
+            kwargs["execution_id"] = execution_id
             input_node_id = be.create_node(**kwargs)
             be.create_edge(from_id=input_node_id, to_id=function_node_id, execution_id=execution_id)
 
@@ -274,6 +263,7 @@ def track_shell(
             execution_id,
             status=ExecutionStatus.FAILURE,
             duration_seconds=elapsed,
+            end_time=datetime.now(UTC),
             error_message=result.stderr or f"Exit code {result.returncode}",
         )
         return result
@@ -281,17 +271,12 @@ def track_shell(
     if outputs:
         for name, value in outputs.items():
             node_type = _classify_by_value(value)
-            kwargs = {"type_": node_type, "arg_name": name, "execution_id": execution_id}
-            if node_type in (NodeType.DATA_FILE, NodeType.CONFIG_FILE):
-                kwargs["path"] = str(value)
-            elif node_type == NodeType.CONFIG_DICT:
-                kwargs["config_data"] = value
-            elif node_type == NodeType.PARAMETER:
-                kwargs["value_float"] = float(value) if isinstance(value, (int, float)) else None
-            else:
-                kwargs["value_json"] = value
+            kwargs = build_node_kwargs(name, node_type, value)
+            kwargs["execution_id"] = execution_id
             output_node_id = be.create_node(**kwargs)
             be.create_edge(from_id=function_node_id, to_id=output_node_id, execution_id=execution_id)
 
-    be.update_execution(execution_id, status=ExecutionStatus.SUCCESS, duration_seconds=elapsed)
+    be.update_execution(
+        execution_id, status=ExecutionStatus.SUCCESS, duration_seconds=elapsed, end_time=datetime.now(UTC)
+    )
     return result

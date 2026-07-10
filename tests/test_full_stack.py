@@ -26,6 +26,8 @@ class TestFullStack:
         assert executions[0].status == ExecutionStatus.SUCCESS
         assert executions[0].duration_seconds is not None
         assert executions[0].duration_seconds >= 0
+        assert executions[0].end_time is not None
+        assert executions[0].end_time >= executions[0].start_time
 
         nodes = node.get_rows()
         assert len(nodes) == 4
