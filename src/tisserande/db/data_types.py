@@ -1,3 +1,5 @@
+"""ORM models for data-related type tables (lookup tables with int PKs)."""
+
 from pydantic import BaseModel
 from sqlalchemy import Integer, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column

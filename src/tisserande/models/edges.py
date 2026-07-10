@@ -1,3 +1,5 @@
+"""Pydantic models for provenance graph edges connecting nodes."""
+
 from typing import ClassVar
 from uuid import UUID
 

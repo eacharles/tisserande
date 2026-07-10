@@ -1,3 +1,5 @@
+"""Configuration for tisserande, loaded from environment variables."""
+
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

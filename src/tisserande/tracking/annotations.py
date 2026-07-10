@@ -1,3 +1,14 @@
+"""Type annotations for marking function arguments with their provenance role.
+
+Usage::
+
+    from tisserande.tracking.annotations import DataFile, Param
+
+    @track
+    def process(input_file: DataFile[str], threshold: Param[float]) -> DataFile[str]:
+        ...
+"""
+
 from typing import Annotated, TypeVar
 
 T = TypeVar("T")

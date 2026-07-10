@@ -1,3 +1,5 @@
+"""Pydantic models for data-related type tables (DataFileType, ConfigFileType, etc.)."""
+
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field

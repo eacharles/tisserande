@@ -1,19 +1,25 @@
+"""ORM model for the Execution table (one record per tracked function call)."""
+
 import uuid
 from datetime import datetime
 
 from pydantic import BaseModel
 from sqlalchemy import DateTime, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
-from uuid_utils import uuid7
 
 from .. import models
 from .base import Base
 
 
+def _uuid7() -> uuid.UUID:
+    import uuid_utils
+    return uuid.UUID(str(uuid_utils.uuid7()))
+
+
 class ExecutionTable(Base):
     __tablename__ = "execution"
 
-    id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid7)
+    id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
     function_node_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("node.id_"), nullable=True,
     )

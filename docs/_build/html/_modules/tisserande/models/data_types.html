@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tisserande.models.data_types &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/architecture.html">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/tracking.html">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tisserande.models.data_types</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tisserande.models.data_types</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Pydantic models for data-related type tables (DataFileType, ConfigFileType, etc.).&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span>
+
+
+<div class="viewcode-block" id="DataFileTypeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.DataFileTypeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileTypeBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a type of file that contains data.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataFileTypeBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.DataFileTypeBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the data file type&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DataFileTypeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.DataFileTypeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileTypeCreate</span><span class="p">(</span><span class="n">DataFileTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a DataFileType.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="DataFileType">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.DataFileType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileType</span><span class="p">(</span><span class="n">DataFileTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataFileType response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataFileType.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.DataFileType.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataFileType.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.DataFileType.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DataFileType.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.DataFileType.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigFileTypeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigFileTypeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileTypeBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a type of file that contains configuration.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigFileTypeBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigFileTypeBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the config file type&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigFileTypeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ConfigFileTypeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileTypeCreate</span><span class="p">(</span><span class="n">ConfigFileTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ConfigFileType.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ConfigFileType">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ConfigFileType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileType</span><span class="p">(</span><span class="n">ConfigFileTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConfigFileType response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigFileType.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigFileType.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfigFileType.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigFileType.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ConfigFileType.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigFileType.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigDictTypeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigDictTypeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictTypeBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a type of dict that contains configuration.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigDictTypeBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigDictTypeBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the config dict type&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigDictTypeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ConfigDictTypeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictTypeCreate</span><span class="p">(</span><span class="n">ConfigDictTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ConfigDictType.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ConfigDictType">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ConfigDictType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictType</span><span class="p">(</span><span class="n">ConfigDictTypeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConfigDictType response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigDictType.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigDictType.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfigDictType.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigDictType.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ConfigDictType.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ConfigDictType.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ParameterBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ParameterBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a parameter definition.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParameterBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ParameterBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the parameter&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ParameterCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ParameterCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterCreate</span><span class="p">(</span><span class="n">ParameterBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a Parameter.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Parameter">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.Parameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parameter</span><span class="p">(</span><span class="n">ParameterBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Parameter.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Parameter.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parameter.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Parameter.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Parameter.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Parameter.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ArrayBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for an array definition.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ArrayBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ArrayBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the array&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArrayBase.n_dim">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ArrayBase.n_dim">[docs]</a>
+    <span class="n">n_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of dimensions&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArrayBase.shape">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ArrayBase.shape">[docs]</a>
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Shape of the array&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ArrayCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayCreate</span><span class="p">(</span><span class="n">ArrayBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create an Array.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Array">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.Array">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Array</span><span class="p">(</span><span class="n">ArrayBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Array response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Array.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Array.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Array.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Array.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;n_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Array.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Array.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ClassBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ClassBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a Python class definition.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ClassBase.name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ClassBase.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the class&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassBase.module_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.ClassBase.module_">[docs]</a>
+    <span class="n">module_</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Python module where it lives&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ClassCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.ClassCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassCreate</span><span class="p">(</span><span class="n">ClassBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a Class.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Class">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/index.html#tisserande.models.data_types.Class">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Class</span><span class="p">(</span><span class="n">ClassBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Class.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Class.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Class.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Class.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;module_&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Class.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/data_types/index.html#tisserande.models.data_types.Class.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

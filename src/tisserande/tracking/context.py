@@ -1,3 +1,5 @@
+"""Execution context that orchestrates provenance recording for one function call."""
+
 from __future__ import annotations
 
 import time

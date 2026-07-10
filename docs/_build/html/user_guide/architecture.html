@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tracking Decorators" href="tracking.html" />
+    <link rel="prev" title="User Guide" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tracking.html">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracking.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">User Guide</a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/architecture.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+<p>Tisserande is built as a layered architecture on top of the <a class="reference external" href="https://github.com/eacharles/macon">macon</a> CRUD framework.</p>
+<section id="layer-diagram">
+<h2>Layer Diagram<a class="headerlink" href="#layer-diagram" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tracking Decorators (@track, @track_async, track_shell)
+  └── TrackingContext + ArgumentInspector
+        └── TrackingBackend (LocalSyncBackend / NullBackend)
+              └── local_sync (SyncOperations)
+                    └── local_async (LocalOperations)
+                          └── db_oper (TableOperations)
+                                └── macon.db_funcs (raw SQLAlchemy queries)
+                                      └── macon.db (Base, session)
+</pre></div>
+</div>
+</section>
+<section id="layer-responsibilities">
+<h2>Layer Responsibilities<a class="headerlink" href="#layer-responsibilities" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">models/</span></code></p></td>
+<td><p>Pydantic models for validation and serialization (Base/Create/Response triplets)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">db/</span></code></p></td>
+<td><p>SQLAlchemy ORM table definitions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">db_oper/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TableOperations</span></code> subclasses with FK resolution logic</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">local_async/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LocalOperations</span></code> wrappers adding session management (<code class="docutils literal notranslate"><span class="pre">&#64;with_session</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">local_sync/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SyncOperations</span></code> wrappers adding <code class="docutils literal notranslate"><span class="pre">asyncio.run()</span></code> for non-async contexts</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tracking/</span></code></p></td>
+<td><p>Decorators, argument inspection, backends, execution lifecycle</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">router/</span></code></p></td>
+<td><p>FastAPI application with auto-generated CRUD endpoints</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cli/</span></code></p></td>
+<td><p>Click CLI entry points for admin tasks</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="domain-model">
+<h2>Domain Model<a class="headerlink" href="#domain-model" title="Link to this heading"></a></h2>
+<p>The provenance graph consists of three entity types:</p>
+<p><strong>Nodes</strong> — vertices in the DAG, stored in a single table with a <code class="docutils literal notranslate"><span class="pre">type_</span></code>
+discriminator column:</p>
+<ul class="simple">
+<li><p><em>Data nodes</em>: <code class="docutils literal notranslate"><span class="pre">data_file</span></code>, <code class="docutils literal notranslate"><span class="pre">config_file</span></code>, <code class="docutils literal notranslate"><span class="pre">config_dict</span></code>, <code class="docutils literal notranslate"><span class="pre">parameter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">array</span></code>, <code class="docutils literal notranslate"><span class="pre">object</span></code></p></li>
+<li><p><em>Logic nodes</em>: <code class="docutils literal notranslate"><span class="pre">python_function</span></code>, <code class="docutils literal notranslate"><span class="pre">member_function</span></code>, <code class="docutils literal notranslate"><span class="pre">shell_function</span></code></p></li>
+</ul>
+<p><strong>Edges</strong> — directed links between nodes:</p>
+<ul class="simple">
+<li><p>Data → Logic = “this data is an input to this function”</p></li>
+<li><p>Logic → Data = “this function produced this data”</p></li>
+</ul>
+<p><strong>Executions</strong> — groups all nodes and edges from a single function call, with
+timing information and status.</p>
+</section>
+<section id="database-schema">
+<h2>Database Schema<a class="headerlink" href="#database-schema" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────┐     ┌──────────────┐     ┌──────────────────┐
+│  Type Tables    │     │    node      │     │    execution     │
+│  (int PK)       │◄────│  (UUID PK)   │────►│   (UUID PK)      │
+│                 │     │  type_       │     │   status         │
+│  data_file_type │     │  path        │     │   start_time     │
+│  config_file_..│     │  value_float │     │   duration_secs  │
+│  parameter      │     │  value_json  │     │   error_message  │
+│  python_func.. │     │  arg_name    │     └──────────────────┘
+│  ...            │     │  execution_id│
+└─────────────────┘     └──────────────┘
+                               ▲  ▲
+                               │  │
+                        ┌──────┘  └──────┐
+                        │    edge        │
+                        │  (int PK)      │
+                        │  from_id (FK)  │
+                        │  to_id (FK)    │
+                        │  execution_id  │
+                        └────────────────┘
+</pre></div>
+</div>
+<p>Design decisions:</p>
+<ul class="simple">
+<li><p><strong>Single Node table</strong> with nullable type-specific columns — simplifies graph
+queries since edges reference only one table.</p></li>
+<li><p><strong>UUID7 primary keys</strong> for nodes and executions — time-ordered and globally unique.</p></li>
+<li><p><strong>Integer primary keys</strong> for type tables and edges — low-cardinality or high-volume.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tracking.html" class="btn btn-neutral float-right" title="Tracking Decorators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,18 +1,30 @@
+"""ORM model for the Node table (single table for all node types).
+
+All node types (data files, config files, parameters, arrays, objects,
+python functions, member functions, shell functions) share this one table.
+Type-specific fields are nullable columns. This design simplifies graph
+queries since edges only reference one table.
+"""
+
 import uuid
 
 from pydantic import BaseModel
 from sqlalchemy import JSON, Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
-from uuid_utils import uuid7
 
 from .. import models
 from .base import Base
 
 
+def _uuid7() -> uuid.UUID:
+    import uuid_utils
+    return uuid.UUID(str(uuid_utils.uuid7()))
+
+
 class NodeTable(Base):
     __tablename__ = "node"
 
-    id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid7)
+    id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
     type_: Mapped[str] = mapped_column(String(50), index=True)
     execution_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("execution.id_"), nullable=True, index=True,

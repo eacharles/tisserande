@@ -1,3 +1,5 @@
+"""Node type and execution status enumerations for the provenance graph."""
+
 import enum
 
 

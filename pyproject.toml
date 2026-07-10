@@ -51,10 +51,19 @@ dev = [
     "types-pyyaml>=6.0.12.20240917",
 ]
 
+docs = [
+    "nbsphinx",
+    "sphinx",
+    "sphinx-autodoc-typehints",
+    "sphinx_rtd_theme",
+    "sphinx-autoapi",
+]
+
 all = [
     "tisserande[server]",
     "tisserande[client]",
     "tisserande[dev]",
+    "tisserande[docs]",
 ]
 
 

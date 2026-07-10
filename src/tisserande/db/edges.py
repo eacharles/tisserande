@@ -1,3 +1,5 @@
+"""ORM model for the Edge table (directed links between nodes in the provenance DAG)."""
+
 import uuid
 
 from pydantic import BaseModel

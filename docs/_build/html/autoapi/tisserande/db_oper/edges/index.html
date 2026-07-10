@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tisserande.db_oper.edges &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="tisserande.db_oper.execution" href="../execution/index.html" />
+    <link rel="prev" title="tisserande.db_oper.data_types" href="../data_types/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/architecture.html">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/architecture.html#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/architecture.html#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/architecture.html#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/architecture.html#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/tracking.html">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/tracking.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user_guide/cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../api/index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">tisserande</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../db/index.html">tisserande.db</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">tisserande</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../db/index.html">tisserande.db</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../api/index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">tisserande</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">tisserande.db_oper</a></li>
+      <li class="breadcrumb-item active">tisserande.db_oper.edges</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/tisserande/db_oper/edges/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tisserande.db_oper.edges">
+<span id="tisserande-db-oper-edges"></span><h1>tisserande.db_oper.edges<a class="headerlink" href="#module-tisserande.db_oper.edges" title="Link to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tisserande.db_oper.edges.edge" title="tisserande.db_oper.edges.edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tisserande.db_oper.edges.EdgeOperations" title="tisserande.db_oper.edges.EdgeOperations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EdgeOperations</span></code></a></p></td>
+<td><p>Base class for Table operations with full type safety.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tisserande.db_oper.edges.EdgeOperations">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tisserande.db_oper.edges.</span></span><span class="sig-name descname"><span class="pre">EdgeOperations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TableContext</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../tracking/annotations/index.html#tisserande.tracking.annotations.T" title="tisserande.tracking.annotations.T"><span class="pre">T</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ResponseT</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">CreateT</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/tisserande/db_oper/edges.html#EdgeOperations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tisserande.db_oper.edges.EdgeOperations" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">macon.db_oper.base.TableOperations</span></code>[<a class="reference internal" href="../../db/edges/index.html#tisserande.db.edges.EdgeTable" title="tisserande.db.edges.EdgeTable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tisserande.db.edges.EdgeTable</span></code></a>, <a class="reference internal" href="../../models/index.html#tisserande.models.Edge" title="tisserande.models.Edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tisserande.models.Edge</span></code></a>, <a class="reference internal" href="../../models/index.html#tisserande.models.EdgeCreate" title="tisserande.models.EdgeCreate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tisserande.models.EdgeCreate</span></code></a>]</p>
+<p>Base class for Table operations with full type safety.</p>
+<p>Provides common CRUD operations for database tables with validation,
+lifecycle hooks, and complete type safety across database models and
+their Pydantic representations.</p>
+<section id="type-parameters">
+<h3>Type Parameters<a class="headerlink" href="#type-parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>T<span class="classifier">TypeVar, bound=Base</span></dt><dd><p>Database model class (SQLAlchemy)</p>
+</dd>
+<dt>ResponseT<span class="classifier">TypeVar, bound=BaseModel</span></dt><dd><p>Pydantic model class for responses</p>
+</dd>
+<dt>CreateT<span class="classifier">TypeVar, bound=BaseModel</span></dt><dd><p>Pydantic model class for creation</p>
+</dd>
+</dl>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>All methods that modify the database (create_row, create_rows, etc.)
+DO NOT commit transactions. The caller MUST manage transactions using
+<cite>async with session.begin()</cite> or explicit commit/rollback.</p>
+<p>All create methods DO add objects to the session and flush them to
+get database-generated values (like auto-increment IDs), but the
+transaction must still be committed by the caller.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">param context<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Shared configuration for this operation</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">myapp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserResponse</span><span class="p">,</span> <span class="n">UserCreate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">context</span> <span class="o">=</span> <span class="n">TableContext</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">db_class</span><span class="o">=</span><span class="n">User</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">response_class</span><span class="o">=</span><span class="n">UserResponse</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">create_class</span><span class="o">=</span><span class="n">UserCreate</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">class_string</span><span class="o">=</span><span class="s2">&quot;user&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ops</span> <span class="o">=</span> <span class="n">TableOperations</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">with</span> <span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">begin</span><span class="p">():</span>
+<span class="gp">... </span>        <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ops</span><span class="o">.</span><span class="n">create_row</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">session</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;alice@example.com&quot;</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="c1"># user is type User (T)</span>
+<span class="gp">... </span>        <span class="n">pydantic_user</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">to_pydantic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="c1"># pydantic_user is type UserResponse (ResponseT)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="tisserande.db_oper.edges.edge">
+<span class="sig-prename descclassname"><span class="pre">tisserande.db_oper.edges.</span></span><span class="sig-name descname"><span class="pre">edge</span></span><a class="reference internal" href="../../../../_modules/tisserande/db_oper/edges.html#edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tisserande.db_oper.edges.edge" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../data_types/index.html" class="btn btn-neutral float-left" title="tisserande.db_oper.data_types" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../execution/index.html" class="btn btn-neutral float-right" title="tisserande.db_oper.execution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

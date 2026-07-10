@@ -1,3 +1,5 @@
+"""Argument introspection for classifying function inputs/outputs into node types."""
+
 from __future__ import annotations
 
 import inspect

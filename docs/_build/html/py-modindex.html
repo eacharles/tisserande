@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Module Index &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+ 
+
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/architecture.html">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/architecture.html#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/architecture.html#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/architecture.html#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/architecture.html#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/tracking.html">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/tracking.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Python Module Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+   <h1>Python Module Index</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-t"><strong>t</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-t"><td></td><td>
+       <strong>t</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-1" style="display: none" alt="-" /></td>
+       <td>
+       <a href="autoapi/tisserande/index.html#module-tisserande"><code class="xref">tisserande</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/cli/index.html#module-tisserande.cli"><code class="xref">tisserande.cli</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/cli/local/index.html#module-tisserande.cli.local"><code class="xref">tisserande.cli.local</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/cli/local/top/index.html#module-tisserande.cli.local.top"><code class="xref">tisserande.cli.local.top</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/cli/server/index.html#module-tisserande.cli.server"><code class="xref">tisserande.cli.server</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/cli/server/top/index.html#module-tisserande.cli.server.top"><code class="xref">tisserande.cli.server.top</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/config/index.html#module-tisserande.config"><code class="xref">tisserande.config</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/index.html#module-tisserande.db"><code class="xref">tisserande.db</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/base/index.html#module-tisserande.db.base"><code class="xref">tisserande.db.base</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/data_types/index.html#module-tisserande.db.data_types"><code class="xref">tisserande.db.data_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/edges/index.html#module-tisserande.db.edges"><code class="xref">tisserande.db.edges</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/execution/index.html#module-tisserande.db.execution"><code class="xref">tisserande.db.execution</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/function_types/index.html#module-tisserande.db.function_types"><code class="xref">tisserande.db.function_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db/nodes/index.html#module-tisserande.db.nodes"><code class="xref">tisserande.db.nodes</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/index.html#module-tisserande.db_oper"><code class="xref">tisserande.db_oper</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/data_types/index.html#module-tisserande.db_oper.data_types"><code class="xref">tisserande.db_oper.data_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/edges/index.html#module-tisserande.db_oper.edges"><code class="xref">tisserande.db_oper.edges</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/execution/index.html#module-tisserande.db_oper.execution"><code class="xref">tisserande.db_oper.execution</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/function_types/index.html#module-tisserande.db_oper.function_types"><code class="xref">tisserande.db_oper.function_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/db_oper/nodes/index.html#module-tisserande.db_oper.nodes"><code class="xref">tisserande.db_oper.nodes</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/index.html#module-tisserande.local_async"><code class="xref">tisserande.local_async</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/data_types/index.html#module-tisserande.local_async.data_types"><code class="xref">tisserande.local_async.data_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/edges/index.html#module-tisserande.local_async.edges"><code class="xref">tisserande.local_async.edges</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/execution/index.html#module-tisserande.local_async.execution"><code class="xref">tisserande.local_async.execution</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/function_types/index.html#module-tisserande.local_async.function_types"><code class="xref">tisserande.local_async.function_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_async/nodes/index.html#module-tisserande.local_async.nodes"><code class="xref">tisserande.local_async.nodes</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/index.html#module-tisserande.local_sync"><code class="xref">tisserande.local_sync</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/data_types/index.html#module-tisserande.local_sync.data_types"><code class="xref">tisserande.local_sync.data_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/edges/index.html#module-tisserande.local_sync.edges"><code class="xref">tisserande.local_sync.edges</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/execution/index.html#module-tisserande.local_sync.execution"><code class="xref">tisserande.local_sync.execution</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/function_types/index.html#module-tisserande.local_sync.function_types"><code class="xref">tisserande.local_sync.function_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/local_sync/nodes/index.html#module-tisserande.local_sync.nodes"><code class="xref">tisserande.local_sync.nodes</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/index.html#module-tisserande.models"><code class="xref">tisserande.models</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/data_types/index.html#module-tisserande.models.data_types"><code class="xref">tisserande.models.data_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/edges/index.html#module-tisserande.models.edges"><code class="xref">tisserande.models.edges</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/execution/index.html#module-tisserande.models.execution"><code class="xref">tisserande.models.execution</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/function_types/index.html#module-tisserande.models.function_types"><code class="xref">tisserande.models.function_types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/nodes/index.html#module-tisserande.models.nodes"><code class="xref">tisserande.models.nodes</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/models/types/index.html#module-tisserande.models.types"><code class="xref">tisserande.models.types</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/router/index.html#module-tisserande.router"><code class="xref">tisserande.router</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/router/app/index.html#module-tisserande.router.app"><code class="xref">tisserande.router.app</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/index.html#module-tisserande.tracking"><code class="xref">tisserande.tracking</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/annotations/index.html#module-tisserande.tracking.annotations"><code class="xref">tisserande.tracking.annotations</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/backends/index.html#module-tisserande.tracking.backends"><code class="xref">tisserande.tracking.backends</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/context/index.html#module-tisserande.tracking.context"><code class="xref">tisserande.tracking.context</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/decorator/index.html#module-tisserande.tracking.decorator"><code class="xref">tisserande.tracking.decorator</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="autoapi/tisserande/tracking/inspector/index.html#module-tisserande.tracking.inspector"><code class="xref">tisserande.tracking.inspector</code></a></td><td>
+       <em></em></td></tr>
+   </table>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

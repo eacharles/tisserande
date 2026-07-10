@@ -1,3 +1,9 @@
+"""Pluggable storage backends for provenance records.
+
+The TrackingBackend protocol defines the interface; concrete implementations
+include LocalSyncBackend (real DB) and NullBackend (no-op for testing).
+"""
+
 from __future__ import annotations
 
 from typing import Any, Protocol

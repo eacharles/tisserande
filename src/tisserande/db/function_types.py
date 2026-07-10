@@ -1,3 +1,5 @@
+"""ORM models for function type tables (PythonFunction, MemberFunction, ShellFunction)."""
+
 from pydantic import BaseModel
 from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column

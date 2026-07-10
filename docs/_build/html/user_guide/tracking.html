@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tracking Decorators &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type Annotations" href="annotations.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">User Guide</a></li>
+      <li class="breadcrumb-item active">Tracking Decorators</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/tracking.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tracking-decorators">
+<h1>Tracking Decorators<a class="headerlink" href="#tracking-decorators" title="Link to this heading"></a></h1>
+<p>The tracking system is the core feature of tisserande. It provides decorators
+that automatically record provenance when functions are called.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>Before using <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code>, configure the tracking system:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tisserande.tracking</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure</span>
+
+<span class="c1"># Option 1: Use a database URL (creates tables automatically)</span>
+<span class="n">configure</span><span class="p">(</span><span class="n">db_url</span><span class="o">=</span><span class="s2">&quot;sqlite+aiosqlite:///provenance.db&quot;</span><span class="p">)</span>
+
+<span class="c1"># Option 2: Use a custom backend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tisserande.tracking.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullBackend</span>
+<span class="n">configure</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">NullBackend</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">configure()</span></code> is not called, decorated functions execute normally without
+any tracking (the decorator is a transparent no-op).</p>
+</section>
+<section id="the-track-decorator">
+<h2>The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator<a class="headerlink" href="#the-track-decorator" title="Link to this heading"></a></h2>
+<p>For synchronous functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tisserande.tracking</span><span class="w"> </span><span class="kn">import</span> <span class="n">track</span>
+
+<span class="nd">@track</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>Can also be called with options:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@track</span><span class="p">(</span><span class="n">track_inputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">track_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>Options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">track_inputs</span></code> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>) — whether to create nodes for input arguments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">track_outputs</span></code> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>) — whether to create nodes for return values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">backend</span></code> — override the global backend for this specific function</p></li>
+</ul>
+</section>
+<section id="the-track-async-decorator">
+<h2>The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator<a class="headerlink" href="#the-track-async-decorator" title="Link to this heading"></a></h2>
+<p>For async functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tisserande.tracking</span><span class="w"> </span><span class="kn">import</span> <span class="n">track_async</span>
+
+<span class="nd">@track_async</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_and_process</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Same options as <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code>.</p>
+</section>
+<section id="the-track-shell-function">
+<h2>The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function<a class="headerlink" href="#the-track-shell-function" title="Link to this heading"></a></h2>
+<p>For shell commands:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tisserande.tracking</span><span class="w"> </span><span class="kn">import</span> <span class="n">track_shell</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">track_shell</span><span class="p">(</span>
+    <span class="s2">&quot;python train.py --epochs 100&quot;</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;script&quot;</span><span class="p">:</span> <span class="s2">&quot;train.py&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;/models/trained.pt&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Success!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">command</span></code> — shell command string or list of arguments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs</span></code> — dict mapping names to values (tracked as input data nodes)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code> — dict mapping names to values (tracked as output data nodes)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">backend</span></code> — override the global backend</p></li>
+</ul>
+</section>
+<section id="what-gets-recorded">
+<h2>What Gets Recorded<a class="headerlink" href="#what-gets-recorded" title="Link to this heading"></a></h2>
+<p>For each tracked function call:</p>
+<ol class="arabic simple">
+<li><p>An <strong>Execution</strong> record is created with status <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code></p></li>
+<li><p>A <strong>function node</strong> is created (type: <code class="docutils literal notranslate"><span class="pre">python_function</span></code> or <code class="docutils literal notranslate"><span class="pre">shell_function</span></code>)</p></li>
+<li><p>For each tracked input argument:
+- A <strong>data node</strong> is created (classified by type annotation or heuristic)
+- An <strong>edge</strong> is created: input node → function node</p></li>
+<li><p>The function executes</p></li>
+<li><p>For each return value:
+- A <strong>data node</strong> is created for the output
+- An <strong>edge</strong> is created: function node → output node</p></li>
+<li><p>The Execution is updated with status (<code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code> or <code class="docutils literal notranslate"><span class="pre">FAILURE</span></code>),
+duration, and error info if applicable</p></li>
+</ol>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<p>If the tracked function raises an exception:</p>
+<ul class="simple">
+<li><p>The exception <strong>propagates normally</strong> (tracking doesn’t suppress errors)</p></li>
+<li><p>The Execution is marked as <code class="docutils literal notranslate"><span class="pre">FAILURE</span></code></p></li>
+<li><p>The error message and full traceback are stored</p></li>
+<li><p>No output nodes or edges are created</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@track</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">risky_function</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x must be non-negative&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">risky_function</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="k">pass</span>  <span class="c1"># Exception propagates; execution recorded as FAILURE</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="annotations.html" class="btn btn-neutral float-right" title="Type Annotations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+"""Pydantic models for function type tables (PythonFunction, MemberFunction, ShellFunction)."""
+
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field

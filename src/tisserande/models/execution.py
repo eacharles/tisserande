@@ -1,3 +1,5 @@
+"""Pydantic models for execution records (one per tracked function call)."""
+
 from datetime import datetime
 from typing import ClassVar
 from uuid import UUID

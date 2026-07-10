@@ -1,0 +1,962 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tisserande.models.nodes &mdash; tisserande  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            tisserande
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#tracking-shell-commands">Tracking Shell Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#async-functions">Async Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started.html#disabling-tracking">Disabling Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/architecture.html">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#layer-diagram">Layer Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#layer-responsibilities">Layer Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#domain-model">Domain Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/architecture.html#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/tracking.html">Tracking Decorators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-async-decorator">The <code class="docutils literal notranslate"><span class="pre">&#64;track_async</span></code> Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#the-track-shell-function">The <code class="docutils literal notranslate"><span class="pre">track_shell()</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#what-gets-recorded">What Gets Recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/tracking.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/annotations.html">Type Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#available-annotations">Available Annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#how-it-works">How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#automatic-classification-heuristics">Automatic Classification (Heuristics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/annotations.html#return-value-classification">Return Value Classification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/configuration.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#database-url-examples">Database URL Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#programmatic-configuration">Programmatic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#configuration-object">Configuration Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/configuration.html#backends">Backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/querying.html">Querying Provenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#synchronous-queries">Synchronous Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#async-queries">Async Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#available-operations">Available Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#available-tables">Available Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/querying.html#example-trace-a-file-s-lineage">Example: Trace a File’s Lineage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/cli.html">Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#tisserande-local">tisserande-local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#tisserande-server">tisserande-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/cli.html#environment-setup">Environment Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/tisserande/index.html">tisserande</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/tisserande/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/cli/index.html">tisserande.cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/config/index.html">tisserande.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db/index.html">tisserande.db</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/db_oper/index.html">tisserande.db_oper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_async/index.html">tisserande.local_async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/local_sync/index.html">tisserande.local_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/models/index.html">tisserande.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/router/index.html">tisserande.router</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/tisserande/tracking/index.html">tisserande.tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tisserande</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tisserande.models.nodes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tisserande.models.nodes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Pydantic models for provenance graph nodes (data nodes and logic nodes).&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeType</span>
+
+
+<div class="viewcode-block" id="NodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeBase</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base model for all graph nodes.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">NodeType</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What type of node&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeCreate</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic node creation model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NodeCreate.path">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.path">[docs]</a>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;File path (for file nodes)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeCreate.config_data">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.config_data">[docs]</a>
+    <span class="n">config_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Config data (for config dict nodes)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeCreate.value_float">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.value_float">[docs]</a>
+    <span class="n">value_float</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Float value (for parameter nodes)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeCreate.value_json">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.value_json">[docs]</a>
+    <span class="n">value_json</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;JSON-serializable value (for array/object nodes)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Argument name in function signature&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NodeCreate.data_file_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.data_file_type_name">[docs]</a>
+    <span class="n">data_file_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.data_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.data_file_type_id">[docs]</a>
+    <span class="n">data_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.config_file_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.config_file_type_name">[docs]</a>
+    <span class="n">config_file_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.config_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.config_file_type_id">[docs]</a>
+    <span class="n">config_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.config_dict_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.config_dict_type_name">[docs]</a>
+    <span class="n">config_dict_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.config_dict_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.config_dict_type_id">[docs]</a>
+    <span class="n">config_dict_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.parameter_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.parameter_name">[docs]</a>
+    <span class="n">parameter_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.parameter_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.parameter_id">[docs]</a>
+    <span class="n">parameter_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.array_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.array_name">[docs]</a>
+    <span class="n">array_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.array_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.array_id">[docs]</a>
+    <span class="n">array_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.class_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.class_name">[docs]</a>
+    <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.class_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.class_id">[docs]</a>
+    <span class="n">class_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.python_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.python_function_name">[docs]</a>
+    <span class="n">python_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.python_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.python_function_id">[docs]</a>
+    <span class="n">python_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.member_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.member_function_name">[docs]</a>
+    <span class="n">member_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.member_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.member_function_id">[docs]</a>
+    <span class="n">member_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.shell_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.shell_function_name">[docs]</a>
+    <span class="n">shell_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NodeCreate.shell_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.NodeCreate.shell_function_id">[docs]</a>
+    <span class="n">shell_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Node">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Node response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Node.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Node.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;arg_name&quot;</span><span class="p">,</span> <span class="s2">&quot;execution_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Node.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="Node.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.path">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.path">[docs]</a>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.config_data">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.config_data">[docs]</a>
+    <span class="n">config_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.value_float">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.value_float">[docs]</a>
+    <span class="n">value_float</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.value_json">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.value_json">[docs]</a>
+    <span class="n">value_json</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Node.data_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.data_file_type_id">[docs]</a>
+    <span class="n">data_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.config_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.config_file_type_id">[docs]</a>
+    <span class="n">config_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.config_dict_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.config_dict_type_id">[docs]</a>
+    <span class="n">config_dict_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.parameter_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.parameter_id">[docs]</a>
+    <span class="n">parameter_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.array_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.array_id">[docs]</a>
+    <span class="n">array_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.class_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.class_id">[docs]</a>
+    <span class="n">class_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.python_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.python_function_id">[docs]</a>
+    <span class="n">python_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.member_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.member_function_id">[docs]</a>
+    <span class="n">member_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Node.shell_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.Node.shell_function_id">[docs]</a>
+    <span class="n">shell_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<span class="c1"># --- Typed node creation helpers ---</span>
+
+
+<div class="viewcode-block" id="DataFileNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a data file node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataFileNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">DATA_FILE</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">DATA_FILE</span></div>
+
+<div class="viewcode-block" id="DataFileNodeBase.path">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeBase.path">[docs]</a>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Path to the data file&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DataFileNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileNodeCreate</span><span class="p">(</span><span class="n">DataFileNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a DataFileNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataFileNodeCreate.data_file_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeCreate.data_file_type_name">[docs]</a>
+    <span class="n">data_file_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DataFileNodeCreate.data_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeCreate.data_file_type_id">[docs]</a>
+    <span class="n">data_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DataFileNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DataFileNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataFileNode</span><span class="p">(</span><span class="n">DataFileNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataFileNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataFileNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataFileNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;data_file_type_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DataFileNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="DataFileNode.data_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode.data_file_type_id">[docs]</a>
+    <span class="n">data_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DataFileNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.DataFileNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigFileNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a config file node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigFileNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">CONFIG_FILE</span></div>
+
+<div class="viewcode-block" id="ConfigFileNodeBase.path">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeBase.path">[docs]</a>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Path to the config file&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigFileNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileNodeCreate</span><span class="p">(</span><span class="n">ConfigFileNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ConfigFileNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigFileNodeCreate.config_file_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeCreate.config_file_type_name">[docs]</a>
+    <span class="n">config_file_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigFileNodeCreate.config_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeCreate.config_file_type_id">[docs]</a>
+    <span class="n">config_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigFileNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigFileNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileNode</span><span class="p">(</span><span class="n">ConfigFileNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConfigFileNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigFileNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfigFileNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;config_file_type_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ConfigFileNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ConfigFileNode.config_file_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode.config_file_type_id">[docs]</a>
+    <span class="n">config_file_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigFileNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigFileNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigDictNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a config dict node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigDictNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">CONFIG_DICT</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">CONFIG_DICT</span></div>
+
+<div class="viewcode-block" id="ConfigDictNodeBase.config_data">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeBase.config_data">[docs]</a>
+    <span class="n">config_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Configuration data&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigDictNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictNodeCreate</span><span class="p">(</span><span class="n">ConfigDictNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ConfigDictNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigDictNodeCreate.config_dict_type_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeCreate.config_dict_type_name">[docs]</a>
+    <span class="n">config_dict_type_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigDictNodeCreate.config_dict_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeCreate.config_dict_type_id">[docs]</a>
+    <span class="n">config_dict_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigDictNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigDictNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigDictNode</span><span class="p">(</span><span class="n">ConfigDictNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConfigDictNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigDictNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfigDictNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;config_dict_type_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ConfigDictNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ConfigDictNode.config_dict_type_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode.config_dict_type_id">[docs]</a>
+    <span class="n">config_dict_type_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ConfigDictNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ConfigDictNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ParameterNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a parameter node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParameterNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">PARAMETER</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">PARAMETER</span></div>
+
+<div class="viewcode-block" id="ParameterNodeBase.value_float">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeBase.value_float">[docs]</a>
+    <span class="n">value_float</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The parameter value&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ParameterNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterNodeCreate</span><span class="p">(</span><span class="n">ParameterNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ParameterNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParameterNodeCreate.parameter_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeCreate.parameter_name">[docs]</a>
+    <span class="n">parameter_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ParameterNodeCreate.parameter_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeCreate.parameter_id">[docs]</a>
+    <span class="n">parameter_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ParameterNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ParameterNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterNode</span><span class="p">(</span><span class="n">ParameterNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParameterNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParameterNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParameterNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;value_float&quot;</span><span class="p">,</span> <span class="s2">&quot;parameter_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ParameterNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ParameterNode.parameter_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode.parameter_id">[docs]</a>
+    <span class="n">parameter_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ParameterNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ParameterNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for an array node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ArrayNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">ARRAY</span></div>
+
+<div class="viewcode-block" id="ArrayNodeBase.value_json">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeBase.value_json">[docs]</a>
+    <span class="n">value_json</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The array data as nested lists&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayNodeCreate</span><span class="p">(</span><span class="n">ArrayNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create an ArrayNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ArrayNodeCreate.array_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeCreate.array_name">[docs]</a>
+    <span class="n">array_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ArrayNodeCreate.array_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeCreate.array_id">[docs]</a>
+    <span class="n">array_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ArrayNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayNode</span><span class="p">(</span><span class="n">ArrayNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ArrayNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ArrayNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArrayNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;array_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ArrayNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ArrayNode.array_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode.array_id">[docs]</a>
+    <span class="n">array_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ArrayNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ArrayNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ObjectNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a python object node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ObjectNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">OBJECT</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">OBJECT</span></div>
+
+<div class="viewcode-block" id="ObjectNodeBase.value_json">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeBase.value_json">[docs]</a>
+    <span class="n">value_json</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;JSON-serializable representation of the object&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ObjectNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectNodeCreate</span><span class="p">(</span><span class="n">ObjectNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create an ObjectNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ObjectNodeCreate.class_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeCreate.class_name">[docs]</a>
+    <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ObjectNodeCreate.class_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeCreate.class_id">[docs]</a>
+    <span class="n">class_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ObjectNodeCreate.arg_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNodeCreate.arg_name">[docs]</a>
+    <span class="n">arg_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ObjectNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectNode</span><span class="p">(</span><span class="n">ObjectNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ObjectNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ObjectNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;class_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ObjectNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ObjectNode.class_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode.class_id">[docs]</a>
+    <span class="n">class_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ObjectNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ObjectNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PythonFunctionNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PythonFunctionNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a python function node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PythonFunctionNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">PYTHON_FUNCTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">PYTHON_FUNCTION</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PythonFunctionNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PythonFunctionNodeCreate</span><span class="p">(</span><span class="n">PythonFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a PythonFunctionNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PythonFunctionNodeCreate.python_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNodeCreate.python_function_name">[docs]</a>
+    <span class="n">python_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="PythonFunctionNodeCreate.python_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNodeCreate.python_function_id">[docs]</a>
+    <span class="n">python_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PythonFunctionNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PythonFunctionNode</span><span class="p">(</span><span class="n">PythonFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PythonFunctionNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PythonFunctionNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PythonFunctionNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;python_function_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PythonFunctionNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="PythonFunctionNode.python_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode.python_function_id">[docs]</a>
+    <span class="n">python_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="PythonFunctionNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.PythonFunctionNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MemberFunctionNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MemberFunctionNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a member function node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MemberFunctionNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">MEMBER_FUNCTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">MEMBER_FUNCTION</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MemberFunctionNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MemberFunctionNodeCreate</span><span class="p">(</span><span class="n">MemberFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a MemberFunctionNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MemberFunctionNodeCreate.member_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNodeCreate.member_function_name">[docs]</a>
+    <span class="n">member_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MemberFunctionNodeCreate.member_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNodeCreate.member_function_id">[docs]</a>
+    <span class="n">member_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MemberFunctionNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MemberFunctionNode</span><span class="p">(</span><span class="n">MemberFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MemberFunctionNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MemberFunctionNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MemberFunctionNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;member_function_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MemberFunctionNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="MemberFunctionNode.member_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode.member_function_id">[docs]</a>
+    <span class="n">member_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MemberFunctionNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.MemberFunctionNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ShellFunctionNodeBase">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNodeBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShellFunctionNodeBase</span><span class="p">(</span><span class="n">NodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for a shell function node.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ShellFunctionNodeBase.type_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNodeBase.type_">[docs]</a>
+    <span class="n">type_</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">NodeType</span><span class="o">.</span><span class="n">SHELL_FUNCTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">SHELL_FUNCTION</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ShellFunctionNodeCreate">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNodeCreate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShellFunctionNodeCreate</span><span class="p">(</span><span class="n">ShellFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fields used to create a ShellFunctionNode.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ShellFunctionNodeCreate.shell_function_name">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNodeCreate.shell_function_name">[docs]</a>
+    <span class="n">shell_function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ShellFunctionNodeCreate.shell_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNodeCreate.shell_function_id">[docs]</a>
+    <span class="n">shell_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ShellFunctionNode">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShellFunctionNode</span><span class="p">(</span><span class="n">ShellFunctionNodeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ShellFunctionNode response model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ShellFunctionNode.model_config">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode.model_config">[docs]</a>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">from_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ShellFunctionNode.col_names_for_table">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode.col_names_for_table">[docs]</a>
+    <span class="n">col_names_for_table</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id_&quot;</span><span class="p">,</span> <span class="s2">&quot;type_&quot;</span><span class="p">,</span> <span class="s2">&quot;shell_function_id&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ShellFunctionNode.id_">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode.id_">[docs]</a>
+    <span class="n">id_</span><span class="p">:</span> <span class="n">UUID</span></div>
+
+<div class="viewcode-block" id="ShellFunctionNode.shell_function_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode.shell_function_id">[docs]</a>
+    <span class="n">shell_function_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ShellFunctionNode.execution_id">
+<a class="viewcode-back" href="../../../autoapi/tisserande/models/nodes/index.html#tisserande.models.ShellFunctionNode.execution_id">[docs]</a>
+    <span class="n">execution_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Eric Charles.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

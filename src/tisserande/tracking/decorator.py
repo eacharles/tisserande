@@ -1,3 +1,8 @@
+"""Tracking decorators: @track, @track_async, and track_shell().
+
+These are the primary user-facing API for automatic provenance capture.
+"""
+
 from __future__ import annotations
 
 import subprocess

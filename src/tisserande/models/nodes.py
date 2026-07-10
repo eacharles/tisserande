@@ -1,3 +1,5 @@
+"""Pydantic models for provenance graph nodes (data nodes and logic nodes)."""
+
 from typing import Any, ClassVar, Literal
 from uuid import UUID
 
