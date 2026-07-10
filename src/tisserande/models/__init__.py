@@ -23,6 +23,7 @@ from .function_types import (
     ShellFunctionCreate,
 )
 from .nodes import (
+    AnyNodeCreate,
     ArrayNode,
     ArrayNodeCreate,
     ConfigDictNode,
@@ -34,7 +35,6 @@ from .nodes import (
     MemberFunctionNode,
     MemberFunctionNodeCreate,
     Node,
-    NodeCreate,
     ObjectNode,
     ObjectNodeCreate,
     ParameterNode,
@@ -68,7 +68,7 @@ __all__ = [
     "ShellFunction",
     "ShellFunctionCreate",
     "Node",
-    "NodeCreate",
+    "AnyNodeCreate",
     "DataFileNode",
     "DataFileNodeCreate",
     "ConfigFileNode",

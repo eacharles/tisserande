@@ -3,11 +3,12 @@
 import uuid
 
 from tisserande.models import (
+    DataFileNodeCreate,
     DataFileType,
     DataFileTypeCreate,
     EdgeCreate,
     ExecutionCreate,
-    NodeCreate,
+    ParameterNodeCreate,
     PythonFunction,
     PythonFunctionCreate,
 )
@@ -49,14 +50,15 @@ class TestPythonFunction:
         assert obj.id_ == 1
 
 
-class TestNodeCreate:
+class TestTypedNodeCreate:
     def test_data_file_node(self):
-        obj = NodeCreate(type_=NodeType.DATA_FILE, path="/tmp/data.fits")
+        obj = DataFileNodeCreate(path="/tmp/data.fits")
         assert obj.type_ == NodeType.DATA_FILE
         assert obj.path == "/tmp/data.fits"
 
     def test_parameter_node(self):
-        obj = NodeCreate(type_=NodeType.PARAMETER, value_float=3.14)
+        obj = ParameterNodeCreate(value_float=3.14)
+        assert obj.type_ == NodeType.PARAMETER
         assert obj.value_float == 3.14
 
 
