@@ -35,7 +35,7 @@ Tracking Decorators (@track, @track_async, track_shell)
 
 The provenance graph has three entity types:
 
-- **Nodes** — vertices in the DAG. A single `node` table with a `type_` discriminator column and nullable type-specific fields.
+- **Nodes** — vertices in the DAG. A base `node` table with a `type_` discriminator and per-type subtables via joined-table inheritance.
   - Data nodes: `data_file`, `config_file`, `config_dict`, `parameter`, `array`, `object`
   - Logic nodes: `python_function`, `member_function`, `shell_function`
 - **Edges** — directed links between nodes (`from_id` → `to_id`)
@@ -47,10 +47,10 @@ Each node type can optionally reference a **type table** (e.g., `data_file_type`
 
 ## Key Patterns
 
-- **Single Node table**: All node types share one table with nullable columns. Simplifies graph queries since edges reference only one table.
+- **Joined-table inheritance**: A base `node` table holds shared columns (`id_`, `type_`, `execution_id`, `arg_name`); each node type has its own subtable (e.g., `data_file_node`, `parameter_node`) with type-specific columns. Edges FK to the base table, keeping graph queries simple.
 - **UUID7 primary keys** for nodes/executions (time-ordered, via `uuid_utils`), int PKs for type tables and edges. Note: `uuid_utils.UUID` is not a subclass of `uuid.UUID` — we use a `uuid7()` wrapper in `db/utils.py` that returns standard `uuid.UUID`.
 - **Macon integration**: Inherits `macon.db.base.Base`, uses `TableOperations`, `LocalOperations`, `SyncOperations`, `create_table_router`, `make_table_group`.
-- **Three-model pattern** (from macon): `FooBase` → `FooCreate` (creation fields) → `Foo` (response with `id_`, `ConfigDict(from_attributes=True)`, `col_names_for_table`).
+- **Three-model pattern** (from macon): `FooBase` → `FooCreate` (creation fields) → `Foo` (response with `id_`, `ConfigDict(from_attributes=True)`, `col_names_for_table`). Typed node models inherit from `_TypedNodeCreateMixin` and `_TypedNodeResponseMixin` to avoid repeating common fields (`arg_name`, `execution_id`, `id_`, `model_config`).
 - **Tracking annotations**: `Annotated[]` type aliases (`DataFile[T]`, `Param[T]`, etc.) control how arguments are classified.
 - **Pluggable backends**: `TrackingBackend` protocol allows `LocalSyncBackend` (real DB), `NullBackend` (testing), or custom implementations.
 - **Decorator no-op**: If `configure()` hasn't been called, `@track` is transparent (function runs without tracking overhead).
@@ -69,7 +69,7 @@ Each node type can optionally reference a **type table** (e.g., `data_file_type`
 ### Models & DB
 - `src/tisserande/models/types.py` — `NodeType` and `ExecutionStatus` enums
 - `src/tisserande/models/nodes.py` — All node Pydantic models (generic + typed variants)
-- `src/tisserande/db/nodes.py` — Single `NodeTable` ORM model
+- `src/tisserande/db/nodes.py` — `NodeTable` base + per-type subtables (joined-table inheritance)
 - `src/tisserande/db/execution.py` — `ExecutionTable` ORM model
 - `src/tisserande/db/utils.py` — Shared `uuid7()` helper for time-ordered primary keys
 - `src/tisserande/db_oper/nodes.py` — `NodeOperations` with type-dependent FK resolution
@@ -163,9 +163,9 @@ GitHub Actions workflows in `.github/workflows/`:
 ### Adding a New Node Type
 
 1. Add value to `NodeType` enum in `models/types.py`
-2. Add nullable columns to `db/nodes.py` `NodeTable` if needed
-3. Add FK mapping to `_TYPE_FK_MAP` in `db_oper/nodes.py`
-4. Add typed Pydantic models (Base/Create/Response) in `models/nodes.py`
+2. Add a subtable class in `db/nodes.py` inheriting from `NodeTable` (joined-table inheritance)
+3. Add typed Pydantic models (Base/Create/Response) in `models/nodes.py` using `_TypedNodeCreateMixin` and `_TypedNodeResponseMixin`
+4. Add FK mapping to `_TYPE_FK_MAP` and `_TYPE_DB_CLASS_MAP` in `db_oper/nodes.py`
 5. Add heuristic classification in `tracking/inspector.py` `_classify_by_value()`
 6. Add annotation alias in `tracking/annotations.py`
 
