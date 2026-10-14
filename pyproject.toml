@@ -47,7 +47,7 @@ dev = [
     "pytest-cov>=6.0.0",
     "pytest-timeout>=2.3.1",
     "mypy",
-    "mypy_extensions",
+    "sqlalchemy[mypy]",
     "ruff>=0.8.0",
     "pylint",
     "types-pyyaml>=6.0.12.20240917",
