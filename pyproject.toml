@@ -47,6 +47,7 @@ dev = [
     "pytest-cov>=6.0.0",
     "pytest-timeout>=2.3.1",
     "mypy",
+    "sqlalchemy[mypy]",
     "ruff>=0.8.0",
     "pylint",
     "types-pyyaml>=6.0.12.20240917",
@@ -171,7 +172,7 @@ strict_equality = true
 warn_redundant_casts = true
 warn_unreachable = true
 warn_unused_ignores = true
-plugins = ["sqlalchemy.ext.mypy.plugin", "pydantic.mypy"]
+plugins = ["pydantic.mypy"]
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120

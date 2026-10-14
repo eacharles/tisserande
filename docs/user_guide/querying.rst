@@ -89,9 +89,16 @@ Each table is accessible as a module-level instance:
 
 **Core provenance tables**:
 
-- ``node`` — all provenance graph nodes
+- ``node`` — all provenance graph nodes (including CECI file and stage nodes)
 - ``edge`` — all provenance graph edges
-- ``execution`` — all execution records
+- ``execution`` — all execution records (pipeline and stage level)
+
+**CECI pipeline tables**:
+
+- ``ceci_pipeline`` — pipeline definitions (name, YAML structure, default config)
+- ``ceci_pipeline_variant`` — config override sets on a base pipeline
+- ``ceci_pipeline_instance`` — specific pipeline runs (date, status, variant FK)
+- ``ceci_pipeline_stage_assoc`` — associations between pipelines and stage nodes
 
 Example: Trace a File's Lineage
 -------------------------------

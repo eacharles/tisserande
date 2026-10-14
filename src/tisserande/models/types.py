@@ -15,6 +15,8 @@ class NodeType(enum.Enum):
     PYTHON_FUNCTION = "python_function"
     MEMBER_FUNCTION = "member_function"
     SHELL_FUNCTION = "shell_function"
+    CECI_FILE = "ceci_file"
+    CECI_STAGE = "ceci_stage"
 
     @property
     def is_data(self) -> bool:
@@ -42,6 +44,7 @@ _DATA_TYPES = frozenset(
         NodeType.PARAMETER,
         NodeType.ARRAY,
         NodeType.OBJECT,
+        NodeType.CECI_FILE,
     }
 )
 
@@ -50,5 +53,6 @@ _LOGIC_TYPES = frozenset(
         NodeType.PYTHON_FUNCTION,
         NodeType.MEMBER_FUNCTION,
         NodeType.SHELL_FUNCTION,
+        NodeType.CECI_STAGE,
     }
 )

@@ -49,20 +49,31 @@ Domain Model
 
 The provenance graph consists of three entity types:
 
-**Nodes** — vertices in the DAG, stored in a single table with a ``type_``
-discriminator column:
+**Nodes** — vertices in the DAG. A base ``node`` table holds shared columns
+(``id_``, ``type_``, ``execution_id``, ``arg_name``) and per-type subtables are
+joined via SQLAlchemy's joined-table inheritance:
 
 - *Data nodes*: ``data_file``, ``config_file``, ``config_dict``, ``parameter``,
-  ``array``, ``object``
-- *Logic nodes*: ``python_function``, ``member_function``, ``shell_function``
+  ``array``, ``object``, ``ceci_file``
+- *Logic nodes*: ``python_function``, ``member_function``, ``shell_function``,
+  ``ceci_stage``
 
 **Edges** — directed links between nodes:
 
 - Data → Logic = "this data is an input to this function"
 - Logic → Data = "this function produced this data"
 
-**Executions** — groups all nodes and edges from a single function call, with
-timing information and status.
+**Executions** — groups all nodes and edges from a single function call or
+pipeline run, with timing, status, and optional ``parent_execution_id`` for
+nesting stage executions inside a pipeline execution.
+
+**CECI pipeline tables** — schema-level records for DESC/CECI pipelines (not
+part of the DAG, but used to annotate instance nodes):
+
+- ``ceci_pipeline`` — pipeline definition (name, YAML structure, default config)
+- ``ceci_pipeline_variant`` — a config override set on a base pipeline
+- ``ceci_pipeline_instance`` — a specific pipeline run (date, status, variant FK)
+- ``ceci_pipeline_stage_assoc`` — many-to-many between pipeline and schema stage nodes
 
 Database Schema
 ---------------
@@ -91,7 +102,12 @@ Database Schema
 
 Design decisions:
 
-- **Single Node table** with nullable type-specific columns — simplifies graph
-  queries since edges reference only one table.
+- **Joined-table inheritance** for nodes — a base ``node`` table with per-type
+  subtables (``data_file_node``, ``ceci_stage_node``, etc.) keeps graph queries
+  simple: edges always FK to ``node.id_``.
+- **Schema vs instance nodes** — a node with ``execution_id=None`` is a schema
+  node (class or file type definition); one with ``execution_id`` set is an
+  instance node from a specific run. The same table and model serve both roles.
 - **UUID7 primary keys** for nodes and executions — time-ordered and globally unique.
-- **Integer primary keys** for type tables and edges — low-cardinality or high-volume.
+- **Integer primary keys** for type/pipeline tables and edges — low-cardinality
+  or high-volume write paths.

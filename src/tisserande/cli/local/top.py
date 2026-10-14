@@ -3,6 +3,10 @@ from macon.cli.local.base import make_table_group
 
 from ...local_sync import (
     array,
+    ceci_pipeline,
+    ceci_pipeline_instance,
+    ceci_pipeline_stage_assoc,
+    ceci_pipeline_variant,
     class_,
     config_dict_type,
     config_file_type,
@@ -22,6 +26,18 @@ def cli() -> None:
     """Tisserande local database CLI."""
 
 
+cli.add_command(make_table_group("ceci-pipeline", ceci_pipeline, "Manage CECI pipeline definitions"))
+cli.add_command(
+    make_table_group("ceci-pipeline-variant", ceci_pipeline_variant, "Manage CECI pipeline variants")
+)
+cli.add_command(
+    make_table_group("ceci-pipeline-instance", ceci_pipeline_instance, "Manage CECI pipeline instances")
+)
+cli.add_command(
+    make_table_group(
+        "ceci-pipeline-stage-assoc", ceci_pipeline_stage_assoc, "Manage CECI pipeline-stage associations"
+    )
+)
 cli.add_command(make_table_group("data-file-type", data_file_type, "Manage data file types"))
 cli.add_command(make_table_group("config-file-type", config_file_type, "Manage config file types"))
 cli.add_command(make_table_group("config-dict-type", config_dict_type, "Manage config dict types"))

@@ -24,6 +24,7 @@ class ExecutionCreate(ExecutionBase):
     """Fields used to create an Execution."""
 
     function_node_id: UUID | None = Field(default=None, description="The function node for this execution")
+    parent_execution_id: UUID | None = Field(default=None, description="Enclosing execution (e.g. pipeline)")
 
 
 class Execution(ExecutionBase):
@@ -33,6 +34,7 @@ class Execution(ExecutionBase):
     col_names_for_table: ClassVar[list[str]] = [
         "id_",
         "function_node_id",
+        "parent_execution_id",
         "status",
         "start_time",
         "duration_seconds",
@@ -40,3 +42,4 @@ class Execution(ExecutionBase):
 
     id_: UUID
     function_node_id: UUID | None = None
+    parent_execution_id: UUID | None = None

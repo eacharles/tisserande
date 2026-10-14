@@ -16,3 +16,5 @@ htmlcov/
 .ruff_cache/
 .mypy_cache/
 src/tisserande/_version.py
+docs/_build/
+docs/autoapi/
