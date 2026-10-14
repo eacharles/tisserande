@@ -10,3 +10,4 @@ User Guide
    configuration
    querying
    cli
+   ceci

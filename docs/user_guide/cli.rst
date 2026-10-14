@@ -39,6 +39,10 @@ Each table has its own command group with standard operations:
 
 Available table groups:
 
+- ``ceci-pipeline``
+- ``ceci-pipeline-variant``
+- ``ceci-pipeline-instance``
+- ``ceci-pipeline-stage-assoc``
 - ``data-file-type``
 - ``config-file-type``
 - ``config-dict-type``

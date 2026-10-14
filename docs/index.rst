@@ -26,6 +26,8 @@ Features
   explicitly classify arguments, or let heuristics do it automatically
 - **Shell command tracking** — ``track_shell()`` for non-Python processes
 - **Async support** — ``@track_async`` for async functions
+- **CECI pipeline ingestion** — import provenance from DESC/CECI ``.yaml``
+  pipeline definitions and ``*.out`` log files with a single function call
 - **Full REST API** — auto-generated CRUD endpoints for all provenance tables
 - **CLI tools** — command-line admin for querying and managing provenance data
 - **Pluggable backends** — swap storage implementations without changing your code
