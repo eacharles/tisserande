@@ -12,6 +12,8 @@ from ..db import data_types as db_data
 from ..db import function_types as db_func
 from ..db.nodes import (
     ArrayNodeTable,
+    CeciFileNodeTable,
+    CeciStageNodeTable,
     ConfigDictNodeTable,
     ConfigFileNodeTable,
     DataFileNodeTable,
@@ -60,6 +62,8 @@ _TYPE_DB_CLASS_MAP: dict[str, type[NodeTable]] = {
     NodeType.PYTHON_FUNCTION.value: PythonFunctionNodeTable,
     NodeType.MEMBER_FUNCTION.value: MemberFunctionNodeTable,
     NodeType.SHELL_FUNCTION.value: ShellFunctionNodeTable,
+    NodeType.CECI_FILE.value: CeciFileNodeTable,
+    NodeType.CECI_STAGE.value: CeciStageNodeTable,
 }
 
 
@@ -73,6 +77,8 @@ _TYPE_CREATE_MODEL_MAP: dict[str, type[BaseModel]] = {
     NodeType.PYTHON_FUNCTION.value: models.PythonFunctionNodeCreate,
     NodeType.MEMBER_FUNCTION.value: models.MemberFunctionNodeCreate,
     NodeType.SHELL_FUNCTION.value: models.ShellFunctionNodeCreate,
+    NodeType.CECI_FILE.value: models.CeciFileNodeCreate,
+    NodeType.CECI_STAGE.value: models.CeciStageNodeCreate,
 }
 
 
@@ -133,11 +139,12 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreat
         type_value = kwargs.get("type_")
         db_class = _TYPE_DB_CLASS_MAP.get(type_value, NodeTable)  # type: ignore[arg-type]
 
-        # Filter kwargs to only columns that exist on the target table
-        valid_columns = {c.key for c in db_class.__table__.columns}
-        # Also include inherited columns from parent
-        if db_class is not NodeTable:
-            valid_columns |= {c.key for c in NodeTable.__table__.columns}
+        # Collect columns from all levels of the inheritance hierarchy (handles 3-level inheritance).
+        valid_columns: set[str] = set()
+        for klass in db_class.__mro__:
+            tbl = getattr(klass, "__table__", None)
+            if tbl is not None:
+                valid_columns |= {c.key for c in tbl.columns}
         filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_columns}
 
         filtered_kwargs = await db_class.pre_create_hook(session, filtered_kwargs)

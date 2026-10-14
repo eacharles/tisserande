@@ -22,6 +22,11 @@ class ExecutionTable(Base):
         ForeignKey("node.id_"),
         nullable=True,
     )
+    parent_execution_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("execution.id_"),
+        nullable=True,
+        index=True,
+    )
     status: Mapped[str] = mapped_column(String(20), default="pending")
     start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     end_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
