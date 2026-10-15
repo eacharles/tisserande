@@ -1,6 +1,4 @@
 from .base import Base, close_db, get_session, init_db
-from .ceci_assocs import CeciPipelineStageAssocTable
-from .ceci_pipelines import CeciPipelineInstanceTable, CeciPipelineTable, CeciPipelineVariantTable
 from .data_types import (
     ArrayTable,
     ClassTable,
@@ -14,8 +12,6 @@ from .execution import ExecutionTable
 from .function_types import MemberFunctionTable, PythonFunctionTable, ShellFunctionTable
 from .nodes import (
     ArrayNodeTable,
-    CeciFileNodeTable,
-    CeciStageNodeTable,
     ConfigDictNodeTable,
     ConfigFileNodeTable,
     DataFileNodeTable,
@@ -32,10 +28,6 @@ __all__ = [
     "init_db",
     "get_session",
     "close_db",
-    "CeciPipelineTable",
-    "CeciPipelineVariantTable",
-    "CeciPipelineInstanceTable",
-    "CeciPipelineStageAssocTable",
     "DataFileTypeTable",
     "ConfigFileTypeTable",
     "ConfigDictTypeTable",
@@ -55,8 +47,6 @@ __all__ = [
     "PythonFunctionNodeTable",
     "MemberFunctionNodeTable",
     "ShellFunctionNodeTable",
-    "CeciFileNodeTable",
-    "CeciStageNodeTable",
     "EdgeTable",
     "ExecutionTable",
 ]

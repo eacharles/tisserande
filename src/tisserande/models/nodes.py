@@ -253,81 +253,6 @@ class ShellFunctionNode(ShellFunctionNodeBase, _TypedNodeResponseMixin):
     shell_function_id: int | None = None
 
 
-class CeciFileNodeBase(NodeBase):
-    """Model for a CECI file node.
-
-    Schema nodes (execution_id=None) represent file type definitions.
-    Instance nodes (execution_id set) represent specific files consumed or produced by a stage run.
-    Instance nodes carry ceci_file_schema_node_id pointing to their schema node.
-    """
-
-    type_: Literal[NodeType.CECI_FILE] = NodeType.CECI_FILE
-    path: str | None = Field(default=None, description="File path (instance nodes) or None (schema nodes)")
-    description: str | None = Field(default=None, description="Description of the file type (schema nodes)")
-    data_registry_id: int | None = Field(
-        default=None, description="External data registry ID (instance nodes)"
-    )
-    ceci_file_schema_node_id: UUID | None = Field(
-        default=None, description="Schema node this instance was created from"
-    )
-
-
-class CeciFileNodeCreate(CeciFileNodeBase, _TypedNodeCreateMixin):
-    """Fields used to create a CeciFileNode."""
-
-
-class CeciFileNode(CeciFileNodeBase, _TypedNodeResponseMixin):
-    """CeciFileNode response model."""
-
-    col_names_for_table: ClassVar[list[str]] = [
-        "id_",
-        "type_",
-        "path",
-        "data_registry_id",
-        "ceci_file_schema_node_id",
-    ]
-
-
-class CeciStageNodeBase(NodeBase):
-    """Model for a CECI stage node.
-
-    Schema nodes (execution_id=None) represent stage class definitions
-    (python_path, version, default config).
-    Instance nodes (execution_id set) represent specific stage executions,
-    carrying per-run overrides and ceci_stage_schema_node_id pointing to their schema node.
-    """
-
-    type_: Literal[NodeType.CECI_STAGE] = NodeType.CECI_STAGE
-    name: str | None = Field(default=None, description="Stage name (schema nodes)")
-    python_path: str | None = Field(default=None, description="Python path to the stage class (schema nodes)")
-    version: str | None = Field(default=None, description="Stage version string (schema nodes)")
-    config: dict | None = Field(default=None, description="Default stage config (schema nodes)")
-    overrides: dict | None = Field(default=None, description="Per-run config overrides (instance nodes)")
-    data_registry_id: int | None = Field(
-        default=None, description="External data registry ID (instance nodes)"
-    )
-    ceci_stage_schema_node_id: UUID | None = Field(
-        default=None, description="Schema node this instance was created from"
-    )
-
-
-class CeciStageNodeCreate(CeciStageNodeBase, _TypedNodeCreateMixin):
-    """Fields used to create a CeciStageNode."""
-
-
-class CeciStageNode(CeciStageNodeBase, _TypedNodeResponseMixin):
-    """CeciStageNode response model."""
-
-    col_names_for_table: ClassVar[list[str]] = [
-        "id_",
-        "type_",
-        "name",
-        "python_path",
-        "version",
-        "ceci_stage_schema_node_id",
-    ]
-
-
 AnyNodeCreate = Annotated[
     DataFileNodeCreate
     | ConfigFileNodeCreate
@@ -337,9 +262,7 @@ AnyNodeCreate = Annotated[
     | ObjectNodeCreate
     | PythonFunctionNodeCreate
     | MemberFunctionNodeCreate
-    | ShellFunctionNodeCreate
-    | CeciFileNodeCreate
-    | CeciStageNodeCreate,
+    | ShellFunctionNodeCreate,
     Field(discriminator="type_"),
 ]
 
@@ -352,8 +275,6 @@ AnyNode = Annotated[
     | ObjectNode
     | PythonFunctionNode
     | MemberFunctionNode
-    | ShellFunctionNode
-    | CeciFileNode
-    | CeciStageNode,
+    | ShellFunctionNode,
     Field(discriminator="type_"),
 ]

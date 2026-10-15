@@ -12,8 +12,6 @@ from ..db import data_types as db_data
 from ..db import function_types as db_func
 from ..db.nodes import (
     ArrayNodeTable,
-    CeciFileNodeTable,
-    CeciStageNodeTable,
     ConfigDictNodeTable,
     ConfigFileNodeTable,
     DataFileNodeTable,
@@ -62,8 +60,6 @@ _TYPE_DB_CLASS_MAP: dict[str, type[NodeTable]] = {
     NodeType.PYTHON_FUNCTION.value: PythonFunctionNodeTable,
     NodeType.MEMBER_FUNCTION.value: MemberFunctionNodeTable,
     NodeType.SHELL_FUNCTION.value: ShellFunctionNodeTable,
-    NodeType.CECI_FILE.value: CeciFileNodeTable,
-    NodeType.CECI_STAGE.value: CeciStageNodeTable,
 }
 
 
@@ -77,9 +73,33 @@ _TYPE_CREATE_MODEL_MAP: dict[str, type[BaseModel]] = {
     NodeType.PYTHON_FUNCTION.value: models.PythonFunctionNodeCreate,
     NodeType.MEMBER_FUNCTION.value: models.MemberFunctionNodeCreate,
     NodeType.SHELL_FUNCTION.value: models.ShellFunctionNodeCreate,
-    NodeType.CECI_FILE.value: models.CeciFileNodeCreate,
-    NodeType.CECI_STAGE.value: models.CeciStageNodeCreate,
 }
+
+
+def register_node_type(
+    type_value: str,
+    db_class: type[NodeTable],
+    create_model: type[BaseModel],
+) -> None:
+    """Register an external node type so it participates in polymorphic dispatch.
+
+    Call this once during package initialisation (e.g. in your package's
+    ``__init__.py``) before any ``node.create_row()`` calls are made.
+
+    Parameters
+    ----------
+    type_value:
+        The string discriminator stored in the ``node.type_`` column,
+        e.g. ``"ceci_file"``.
+    db_class:
+        The SQLAlchemy ORM subclass of :class:`NodeTable` whose
+        ``polymorphic_identity`` matches *type_value*.
+    create_model:
+        The pydantic ``*Create`` model used to validate kwargs before
+        inserting into the database.
+    """
+    _TYPE_DB_CLASS_MAP[type_value] = db_class
+    _TYPE_CREATE_MODEL_MAP[type_value] = create_model
 
 
 class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreate]):

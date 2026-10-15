@@ -3,10 +3,6 @@ from macon.router.base import create_table_router
 
 from ..local_async import (
     array,
-    ceci_pipeline,
-    ceci_pipeline_instance,
-    ceci_pipeline_stage_assoc,
-    ceci_pipeline_variant,
     class_,
     config_dict_type,
     config_file_type,
@@ -25,10 +21,6 @@ def create_app() -> FastAPI:
     """Create the tisserande FastAPI application."""
     app = FastAPI(title="tisserande", description="Execution provenance tracking API")
 
-    app.include_router(create_table_router("ceci_pipeline", ceci_pipeline))
-    app.include_router(create_table_router("ceci_pipeline_variant", ceci_pipeline_variant))
-    app.include_router(create_table_router("ceci_pipeline_instance", ceci_pipeline_instance))
-    app.include_router(create_table_router("ceci_pipeline_stage_assoc", ceci_pipeline_stage_assoc))
     app.include_router(create_table_router("data_file_type", data_file_type))
     app.include_router(create_table_router("config_file_type", config_file_type))
     app.include_router(create_table_router("config_dict_type", config_dict_type))
