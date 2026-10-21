@@ -6,19 +6,19 @@ from ..local_async import function_types as async_ops
 
 
 class PythonFunctionSyncOperations(
-    SyncOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
+    SyncOperations[db.PythonFunction, models.PythonFunction, models.PythonFunctionCreate],
 ):
     """Synchronous operations for Python functions."""
 
 
 class MemberFunctionSyncOperations(
-    SyncOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
+    SyncOperations[db.MemberFunction, models.MemberFunction, models.MemberFunctionCreate],
 ):
     """Synchronous operations for member functions."""
 
 
 class ShellFunctionSyncOperations(
-    SyncOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
+    SyncOperations[db.ShellFunction, models.ShellFunction, models.ShellFunctionCreate],
 ):
     """Synchronous operations for shell functions."""
 

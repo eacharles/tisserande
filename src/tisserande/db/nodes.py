@@ -1,6 +1,6 @@
 """ORM models for provenance graph nodes using joined-table inheritance.
 
-Base NodeTable holds shared columns (id, type discriminator, execution_id, arg_name).
+Base Node holds shared columns (id, type discriminator, execution_id, arg_name).
 Each node type has its own subtable with type-specific columns. Edges and executions
 still FK to the base node table, keeping graph queries simple.
 """
@@ -19,7 +19,7 @@ from .base import Base
 from .utils import uuid7 as _uuid7
 
 
-class NodeTable(Base):
+class Node(Base):
     """Base ORM table for all provenance graph nodes."""
 
     __tablename__ = "node"
@@ -58,7 +58,7 @@ class NodeTable(Base):
         return pydantic_class.model_validate(row, from_attributes=True)
 
 
-class DataFileNodeTable(NodeTable):
+class DataFileNode(Node):
     """ORM table for data file nodes."""
 
     __tablename__ = "data_file_node"
@@ -84,7 +84,7 @@ class DataFileNodeTable(NodeTable):
         return "data_file_node"
 
 
-class ConfigFileNodeTable(NodeTable):
+class ConfigFileNode(Node):
     """ORM table for config file nodes."""
 
     __tablename__ = "config_file_node"
@@ -110,7 +110,7 @@ class ConfigFileNodeTable(NodeTable):
         return "config_file_node"
 
 
-class ConfigDictNodeTable(NodeTable):
+class ConfigDictNode(Node):
     """ORM table for config dict nodes."""
 
     __tablename__ = "config_dict_node"
@@ -136,7 +136,7 @@ class ConfigDictNodeTable(NodeTable):
         return "config_dict_node"
 
 
-class ParameterNodeTable(NodeTable):
+class ParameterNode(Node):
     """ORM table for parameter nodes."""
 
     __tablename__ = "parameter_node"
@@ -163,7 +163,7 @@ class ParameterNodeTable(NodeTable):
         return "parameter_node"
 
 
-class ArrayNodeTable(NodeTable):
+class ArrayNode(Node):
     """ORM table for array nodes."""
 
     __tablename__ = "array_node"
@@ -189,7 +189,7 @@ class ArrayNodeTable(NodeTable):
         return "array_node"
 
 
-class ObjectNodeTable(NodeTable):
+class ObjectNode(Node):
     """ORM table for object nodes."""
 
     __tablename__ = "object_node"
@@ -215,7 +215,7 @@ class ObjectNodeTable(NodeTable):
         return "object_node"
 
 
-class PythonFunctionNodeTable(NodeTable):
+class PythonFunctionNode(Node):
     """ORM table for python function nodes."""
 
     __tablename__ = "python_function_node"
@@ -240,7 +240,7 @@ class PythonFunctionNodeTable(NodeTable):
         return "python_function_node"
 
 
-class MemberFunctionNodeTable(NodeTable):
+class MemberFunctionNode(Node):
     """ORM table for member function nodes."""
 
     __tablename__ = "member_function_node"
@@ -265,7 +265,7 @@ class MemberFunctionNodeTable(NodeTable):
         return "member_function_node"
 
 
-class ShellFunctionNodeTable(NodeTable):
+class ShellFunctionNode(Node):
     """ORM table for shell function nodes."""
 
     __tablename__ = "shell_function_node"

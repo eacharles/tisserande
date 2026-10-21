@@ -8,7 +8,7 @@ from .. import models
 from .base import Base
 
 
-class DataFileTypeTable(Base):
+class DataFileType(Base):
     """ORM table for data file type definitions."""
 
     __tablename__ = "data_file_type"
@@ -29,7 +29,7 @@ class DataFileTypeTable(Base):
         return cls.__tablename__
 
 
-class ConfigFileTypeTable(Base):
+class ConfigFileType(Base):
     """ORM table for config file type definitions."""
 
     __tablename__ = "config_file_type"
@@ -50,7 +50,7 @@ class ConfigFileTypeTable(Base):
         return cls.__tablename__
 
 
-class ConfigDictTypeTable(Base):
+class ConfigDictType(Base):
     """ORM table for config dict type definitions."""
 
     __tablename__ = "config_dict_type"
@@ -71,7 +71,7 @@ class ConfigDictTypeTable(Base):
         return cls.__tablename__
 
 
-class ParameterTable(Base):
+class Parameter(Base):
     """ORM table for parameter definitions."""
 
     __tablename__ = "parameter"
@@ -92,7 +92,7 @@ class ParameterTable(Base):
         return cls.__tablename__
 
 
-class ArrayTable(Base):
+class Array(Base):
     """ORM table for array definitions."""
 
     __tablename__ = "array"
@@ -115,7 +115,7 @@ class ArrayTable(Base):
         return cls.__tablename__
 
 
-class ClassTable(Base):
+class Class(Base):
     """ORM table for Python class definitions."""
 
     __tablename__ = "class"

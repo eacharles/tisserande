@@ -11,13 +11,13 @@ from ..db import function_types as db
 
 
 class PythonFunctionOperations(
-    TableOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
+    TableOperations[db.PythonFunction, models.PythonFunction, models.PythonFunctionCreate],
 ):
     """Table operations for Python functions."""
 
 
 class MemberFunctionOperations(
-    TableOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
+    TableOperations[db.MemberFunction, models.MemberFunction, models.MemberFunctionCreate],
 ):
     """Table operations for member functions with class FK resolution."""
 
@@ -29,7 +29,7 @@ class MemberFunctionOperations(
         **kwargs: Any,
     ) -> dict[str, Any]:
         class_id, _ = await db_funcs.read.lookup_by_id_or_name(
-            db_data.ClassTable,
+            db_data.Class,
             session,
             class_id,
             class_name,
@@ -38,11 +38,11 @@ class MemberFunctionOperations(
 
 
 class ShellFunctionOperations(
-    TableOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
+    TableOperations[db.ShellFunction, models.ShellFunction, models.ShellFunctionCreate],
 ):
     """Table operations for shell functions."""
 
 
-python_function = PythonFunctionOperations(TableContext.from_db_class(db.PythonFunctionTable))
-member_function = MemberFunctionOperations(TableContext.from_db_class(db.MemberFunctionTable))
-shell_function = ShellFunctionOperations(TableContext.from_db_class(db.ShellFunctionTable))
+python_function = PythonFunctionOperations(TableContext.from_db_class(db.PythonFunction))
+member_function = MemberFunctionOperations(TableContext.from_db_class(db.MemberFunction))
+shell_function = ShellFunctionOperations(TableContext.from_db_class(db.ShellFunction))

@@ -1,11 +1,11 @@
 from macon.local_async.base import LocalOperations
 
 from .. import models
-from ..db.execution import ExecutionTable
+from ..db.execution import Execution
 from ..db_oper.execution import execution as execution_ops
 
 
-class ExecutionLocalOperations(LocalOperations[ExecutionTable, models.Execution, models.ExecutionCreate]):
+class ExecutionLocalOperations(LocalOperations[Execution, models.Execution, models.ExecutionCreate]):
     """Async session-managed operations for executions."""
 
 
