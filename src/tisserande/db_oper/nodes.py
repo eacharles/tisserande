@@ -11,55 +11,55 @@ from .. import models
 from ..db import data_types as db_data
 from ..db import function_types as db_func
 from ..db.nodes import (
-    ArrayNodeTable,
-    ConfigDictNodeTable,
-    ConfigFileNodeTable,
-    DataFileNodeTable,
-    MemberFunctionNodeTable,
-    NodeTable,
-    ObjectNodeTable,
-    ParameterNodeTable,
-    PythonFunctionNodeTable,
-    ShellFunctionNodeTable,
+    ArrayNode,
+    ConfigDictNode,
+    ConfigFileNode,
+    DataFileNode,
+    MemberFunctionNode,
+    Node,
+    ObjectNode,
+    ParameterNode,
+    PythonFunctionNode,
+    ShellFunctionNode,
 )
 from ..models.types import NodeType
 
 logger = get_logger(__name__)
 
 _TYPE_FK_MAP: dict[str, tuple[str, str, type]] = {
-    NodeType.DATA_FILE.value: ("data_file_type_name", "data_file_type_id", db_data.DataFileTypeTable),
-    NodeType.CONFIG_FILE.value: ("config_file_type_name", "config_file_type_id", db_data.ConfigFileTypeTable),
-    NodeType.CONFIG_DICT.value: ("config_dict_type_name", "config_dict_type_id", db_data.ConfigDictTypeTable),
-    NodeType.PARAMETER.value: ("parameter_name", "parameter_id", db_data.ParameterTable),
-    NodeType.ARRAY.value: ("array_name", "array_id", db_data.ArrayTable),
-    NodeType.OBJECT.value: ("class_name", "class_id", db_data.ClassTable),
+    NodeType.DATA_FILE.value: ("data_file_type_name", "data_file_type_id", db_data.DataFileType),
+    NodeType.CONFIG_FILE.value: ("config_file_type_name", "config_file_type_id", db_data.ConfigFileType),
+    NodeType.CONFIG_DICT.value: ("config_dict_type_name", "config_dict_type_id", db_data.ConfigDictType),
+    NodeType.PARAMETER.value: ("parameter_name", "parameter_id", db_data.Parameter),
+    NodeType.ARRAY.value: ("array_name", "array_id", db_data.Array),
+    NodeType.OBJECT.value: ("class_name", "class_id", db_data.Class),
     NodeType.PYTHON_FUNCTION.value: (
         "python_function_name",
         "python_function_id",
-        db_func.PythonFunctionTable,
+        db_func.PythonFunction,
     ),
     NodeType.MEMBER_FUNCTION.value: (
         "member_function_name",
         "member_function_id",
-        db_func.MemberFunctionTable,
+        db_func.MemberFunction,
     ),
     NodeType.SHELL_FUNCTION.value: (
         "shell_function_name",
         "shell_function_id",
-        db_func.ShellFunctionTable,
+        db_func.ShellFunction,
     ),
 }
 
-_TYPE_DB_CLASS_MAP: dict[str, type[NodeTable]] = {
-    NodeType.DATA_FILE.value: DataFileNodeTable,
-    NodeType.CONFIG_FILE.value: ConfigFileNodeTable,
-    NodeType.CONFIG_DICT.value: ConfigDictNodeTable,
-    NodeType.PARAMETER.value: ParameterNodeTable,
-    NodeType.ARRAY.value: ArrayNodeTable,
-    NodeType.OBJECT.value: ObjectNodeTable,
-    NodeType.PYTHON_FUNCTION.value: PythonFunctionNodeTable,
-    NodeType.MEMBER_FUNCTION.value: MemberFunctionNodeTable,
-    NodeType.SHELL_FUNCTION.value: ShellFunctionNodeTable,
+_TYPE_DB_CLASS_MAP: dict[str, type[Node]] = {
+    NodeType.DATA_FILE.value: DataFileNode,
+    NodeType.CONFIG_FILE.value: ConfigFileNode,
+    NodeType.CONFIG_DICT.value: ConfigDictNode,
+    NodeType.PARAMETER.value: ParameterNode,
+    NodeType.ARRAY.value: ArrayNode,
+    NodeType.OBJECT.value: ObjectNode,
+    NodeType.PYTHON_FUNCTION.value: PythonFunctionNode,
+    NodeType.MEMBER_FUNCTION.value: MemberFunctionNode,
+    NodeType.SHELL_FUNCTION.value: ShellFunctionNode,
 }
 
 
@@ -78,7 +78,7 @@ _TYPE_CREATE_MODEL_MAP: dict[str, type[BaseModel]] = {
 
 def register_node_type(
     type_value: str,
-    db_class: type[NodeTable],
+    db_class: type[Node],
     create_model: type[BaseModel],
 ) -> None:
     """Register an external node type so it participates in polymorphic dispatch.
@@ -92,7 +92,7 @@ def register_node_type(
         The string discriminator stored in the ``node.type_`` column,
         e.g. ``"ceci_file"``.
     db_class:
-        The SQLAlchemy ORM subclass of :class:`NodeTable` whose
+        The SQLAlchemy ORM subclass of :class:`Node` whose
         ``polymorphic_identity`` matches *type_value*.
     create_model:
         The pydantic ``*Create`` model used to validate kwargs before
@@ -102,7 +102,7 @@ def register_node_type(
     _TYPE_CREATE_MODEL_MAP[type_value] = create_model
 
 
-class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreate]):
+class NodeOperations(TableOperations[Node, models.Node, models.AnyNodeCreate]):
     """Operations for the Node table with polymorphic dispatch and FK resolution."""
 
     async def get_create_kwargs(
@@ -136,7 +136,7 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreat
         *,
         validate: bool = True,
         **kwargs: Any,
-    ) -> NodeTable:
+    ) -> Node:
         """Create a node row, dispatching to the correct subclass table."""
         ensure_base_inheritance(self.ctx.db_class)
 
@@ -157,7 +157,7 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreat
         kwargs = await self.get_create_kwargs(session, **kwargs)
 
         type_value = kwargs.get("type_")
-        db_class = _TYPE_DB_CLASS_MAP.get(type_value, NodeTable)  # type: ignore[arg-type]
+        db_class = _TYPE_DB_CLASS_MAP.get(type_value, Node)  # type: ignore[arg-type]
 
         # Collect columns from all levels of the inheritance hierarchy (handles 3-level inheritance).
         valid_columns: set[str] = set()
@@ -175,4 +175,4 @@ class NodeOperations(TableOperations[NodeTable, models.Node, models.AnyNodeCreat
         return row
 
 
-node = NodeOperations(TableContext.from_db_class(NodeTable))
+node = NodeOperations(TableContext.from_db_class(Node))

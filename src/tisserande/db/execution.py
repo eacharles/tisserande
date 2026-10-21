@@ -12,7 +12,7 @@ from .base import Base
 from .utils import uuid7 as _uuid7
 
 
-class ExecutionTable(Base):
+class Execution(Base):
     """ORM table for execution records."""
 
     __tablename__ = "execution"

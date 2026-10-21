@@ -4,11 +4,11 @@ from macon.db_oper.base import TableContext, TableOperations
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .. import models
-from ..db.execution import ExecutionTable
+from ..db.execution import Execution
 from ..models.types import ExecutionStatus
 
 
-class ExecutionOperations(TableOperations[ExecutionTable, models.Execution, models.ExecutionCreate]):
+class ExecutionOperations(TableOperations[Execution, models.Execution, models.ExecutionCreate]):
     """Table operations for executions with status enum conversion."""
 
     async def get_create_kwargs(
@@ -22,4 +22,4 @@ class ExecutionOperations(TableOperations[ExecutionTable, models.Execution, mode
         return kwargs
 
 
-execution = ExecutionOperations(TableContext.from_db_class(ExecutionTable))
+execution = ExecutionOperations(TableContext.from_db_class(Execution))

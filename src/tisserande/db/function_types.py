@@ -8,7 +8,7 @@ from .. import models
 from .base import Base
 
 
-class PythonFunctionTable(Base):
+class PythonFunction(Base):
     """ORM table for Python function definitions."""
 
     __tablename__ = "python_function"
@@ -31,7 +31,7 @@ class PythonFunctionTable(Base):
         return cls.__tablename__
 
 
-class MemberFunctionTable(Base):
+class MemberFunction(Base):
     """ORM table for class member function definitions."""
 
     __tablename__ = "member_function"
@@ -53,7 +53,7 @@ class MemberFunctionTable(Base):
         return cls.__tablename__
 
 
-class ShellFunctionTable(Base):
+class ShellFunction(Base):
     """ORM table for shell function/script definitions."""
 
     __tablename__ = "shell_function"

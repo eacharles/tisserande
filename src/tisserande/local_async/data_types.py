@@ -6,37 +6,37 @@ from ..db_oper import data_types as ops
 
 
 class DataFileTypeLocalOperations(
-    LocalOperations[db.DataFileTypeTable, models.DataFileType, models.DataFileTypeCreate],
+    LocalOperations[db.DataFileType, models.DataFileType, models.DataFileTypeCreate],
 ):
     """Async session-managed operations for data file types."""
 
 
 class ConfigFileTypeLocalOperations(
-    LocalOperations[db.ConfigFileTypeTable, models.ConfigFileType, models.ConfigFileTypeCreate],
+    LocalOperations[db.ConfigFileType, models.ConfigFileType, models.ConfigFileTypeCreate],
 ):
     """Async session-managed operations for config file types."""
 
 
 class ConfigDictTypeLocalOperations(
-    LocalOperations[db.ConfigDictTypeTable, models.ConfigDictType, models.ConfigDictTypeCreate],
+    LocalOperations[db.ConfigDictType, models.ConfigDictType, models.ConfigDictTypeCreate],
 ):
     """Async session-managed operations for config dict types."""
 
 
 class ParameterLocalOperations(
-    LocalOperations[db.ParameterTable, models.Parameter, models.ParameterCreate],
+    LocalOperations[db.Parameter, models.Parameter, models.ParameterCreate],
 ):
     """Async session-managed operations for parameters."""
 
 
 class ArrayLocalOperations(
-    LocalOperations[db.ArrayTable, models.Array, models.ArrayCreate],
+    LocalOperations[db.Array, models.Array, models.ArrayCreate],
 ):
     """Async session-managed operations for arrays."""
 
 
 class ClassLocalOperations(
-    LocalOperations[db.ClassTable, models.Class, models.ClassCreate],
+    LocalOperations[db.Class, models.Class, models.ClassCreate],
 ):
     """Async session-managed operations for classes."""
 

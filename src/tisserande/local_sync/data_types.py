@@ -6,37 +6,37 @@ from ..local_async import data_types as async_ops
 
 
 class DataFileTypeSyncOperations(
-    SyncOperations[db.DataFileTypeTable, models.DataFileType, models.DataFileTypeCreate],
+    SyncOperations[db.DataFileType, models.DataFileType, models.DataFileTypeCreate],
 ):
     """Synchronous operations for data file types."""
 
 
 class ConfigFileTypeSyncOperations(
-    SyncOperations[db.ConfigFileTypeTable, models.ConfigFileType, models.ConfigFileTypeCreate],
+    SyncOperations[db.ConfigFileType, models.ConfigFileType, models.ConfigFileTypeCreate],
 ):
     """Synchronous operations for config file types."""
 
 
 class ConfigDictTypeSyncOperations(
-    SyncOperations[db.ConfigDictTypeTable, models.ConfigDictType, models.ConfigDictTypeCreate],
+    SyncOperations[db.ConfigDictType, models.ConfigDictType, models.ConfigDictTypeCreate],
 ):
     """Synchronous operations for config dict types."""
 
 
 class ParameterSyncOperations(
-    SyncOperations[db.ParameterTable, models.Parameter, models.ParameterCreate],
+    SyncOperations[db.Parameter, models.Parameter, models.ParameterCreate],
 ):
     """Synchronous operations for parameters."""
 
 
 class ArraySyncOperations(
-    SyncOperations[db.ArrayTable, models.Array, models.ArrayCreate],
+    SyncOperations[db.Array, models.Array, models.ArrayCreate],
 ):
     """Synchronous operations for arrays."""
 
 
 class ClassSyncOperations(
-    SyncOperations[db.ClassTable, models.Class, models.ClassCreate],
+    SyncOperations[db.Class, models.Class, models.ClassCreate],
 ):
     """Synchronous operations for classes."""
 

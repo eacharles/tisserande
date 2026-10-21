@@ -4,15 +4,15 @@ import pytest
 from pydantic import ValidationError
 
 from tisserande.db.nodes import (
-    ArrayNodeTable,
-    ConfigDictNodeTable,
-    ConfigFileNodeTable,
-    DataFileNodeTable,
-    MemberFunctionNodeTable,
-    ObjectNodeTable,
-    ParameterNodeTable,
-    PythonFunctionNodeTable,
-    ShellFunctionNodeTable,
+    ArrayNode,
+    ConfigDictNode,
+    ConfigFileNode,
+    DataFileNode,
+    MemberFunctionNode,
+    ObjectNode,
+    ParameterNode,
+    PythonFunctionNode,
+    ShellFunctionNode,
 )
 from tisserande.local_sync import (
     class_,
@@ -66,15 +66,15 @@ class TestNodeTableClassmethods:
     @pytest.mark.parametrize(
         "table_cls,expected_string",
         [
-            (DataFileNodeTable, "data_file_node"),
-            (ConfigFileNodeTable, "config_file_node"),
-            (ConfigDictNodeTable, "config_dict_node"),
-            (ParameterNodeTable, "parameter_node"),
-            (ArrayNodeTable, "array_node"),
-            (ObjectNodeTable, "object_node"),
-            (PythonFunctionNodeTable, "python_function_node"),
-            (MemberFunctionNodeTable, "member_function_node"),
-            (ShellFunctionNodeTable, "shell_function_node"),
+            (DataFileNode, "data_file_node"),
+            (ConfigFileNode, "config_file_node"),
+            (ConfigDictNode, "config_dict_node"),
+            (ParameterNode, "parameter_node"),
+            (ArrayNode, "array_node"),
+            (ObjectNode, "object_node"),
+            (PythonFunctionNode, "python_function_node"),
+            (MemberFunctionNode, "member_function_node"),
+            (ShellFunctionNode, "shell_function_node"),
         ],
     )
     def test_class_string(self, table_cls, expected_string):
@@ -83,15 +83,15 @@ class TestNodeTableClassmethods:
     @pytest.mark.parametrize(
         "table_cls",
         [
-            DataFileNodeTable,
-            ConfigFileNodeTable,
-            ConfigDictNodeTable,
-            ParameterNodeTable,
-            ArrayNodeTable,
-            ObjectNodeTable,
-            PythonFunctionNodeTable,
-            MemberFunctionNodeTable,
-            ShellFunctionNodeTable,
+            DataFileNode,
+            ConfigFileNode,
+            ConfigDictNode,
+            ParameterNode,
+            ArrayNode,
+            ObjectNode,
+            PythonFunctionNode,
+            MemberFunctionNode,
+            ShellFunctionNode,
         ],
     )
     def test_pydantic_create_class(self, table_cls):
@@ -102,15 +102,15 @@ class TestNodeTableClassmethods:
     @pytest.mark.parametrize(
         "table_cls",
         [
-            DataFileNodeTable,
-            ConfigFileNodeTable,
-            ConfigDictNodeTable,
-            ParameterNodeTable,
-            ArrayNodeTable,
-            ObjectNodeTable,
-            PythonFunctionNodeTable,
-            MemberFunctionNodeTable,
-            ShellFunctionNodeTable,
+            DataFileNode,
+            ConfigFileNode,
+            ConfigDictNode,
+            ParameterNode,
+            ArrayNode,
+            ObjectNode,
+            PythonFunctionNode,
+            MemberFunctionNode,
+            ShellFunctionNode,
         ],
     )
     def test_pydantic_model_class(self, table_cls):

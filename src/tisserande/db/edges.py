@@ -10,7 +10,7 @@ from .. import models
 from .base import Base
 
 
-class EdgeTable(Base):
+class Edge(Base):
     """ORM table for directed edges between nodes."""
 
     __tablename__ = "edge"

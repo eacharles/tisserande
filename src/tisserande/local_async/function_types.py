@@ -6,19 +6,19 @@ from ..db_oper import function_types as ops
 
 
 class PythonFunctionLocalOperations(
-    LocalOperations[db.PythonFunctionTable, models.PythonFunction, models.PythonFunctionCreate],
+    LocalOperations[db.PythonFunction, models.PythonFunction, models.PythonFunctionCreate],
 ):
     """Async session-managed operations for Python functions."""
 
 
 class MemberFunctionLocalOperations(
-    LocalOperations[db.MemberFunctionTable, models.MemberFunction, models.MemberFunctionCreate],
+    LocalOperations[db.MemberFunction, models.MemberFunction, models.MemberFunctionCreate],
 ):
     """Async session-managed operations for member functions."""
 
 
 class ShellFunctionLocalOperations(
-    LocalOperations[db.ShellFunctionTable, models.ShellFunction, models.ShellFunctionCreate],
+    LocalOperations[db.ShellFunction, models.ShellFunction, models.ShellFunctionCreate],
 ):
     """Async session-managed operations for shell functions."""
 
