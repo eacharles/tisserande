@@ -5,118 +5,158 @@ from typing import ClassVar
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class DataFileTypeBase(BaseModel):
-    """Model for a type of file that contains data."""
+# DataFile
 
-    name: str = Field(..., description="Name of the data file type")
-
-
-class DataFileTypeCreate(DataFileTypeBase):
-    """Fields used to create a DataFileType."""
+class DataFileTypeMixin:
+    """Mixin class for a DataNodeTemplate that is a data file."""
 
 
-class DataFileType(DataFileTypeBase):
+class DataFileTypeCreate(DataNodeTemplateCreate, DataFileTypeMixin):
+    """Fields used to create a DataFileType that are not in the DB."""
+
+
+class DataFileType(DataNodeTemplate, DataFileTypeMixin):
     """DataFileType response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name"]
 
-    id_: int = Field(..., gt=0)
-
-
-class ConfigFileTypeBase(BaseModel):
-    """Model for a type of file that contains configuration."""
-
-    name: str = Field(..., description="Name of the config file type")
+class DataFileMixin:
+    """Mixin class for a DataNode that is a data file."""
 
 
-class ConfigFileTypeCreate(ConfigFileTypeBase):
-    """Fields used to create a ConfigFileType."""
+class DataFileCreate(DataNodeCreate, DataFileMixin):
+    """Fields used to create a DataFile that are not in the DB."""
 
 
-class ConfigFileType(ConfigFileTypeBase):
+class DataFile(DataNodeTemplate, DataFileMixin)
+    """DataFile response model."""
+
+
+
+# ConfigFile
+
+class ConfigFileTypeMixin:
+    """Mixin class for a DataNodeTemplate that is a configuration file."""
+
+
+class ConfigFileTypeCreate(DataNodeTemplateCreate, ConfigFileTypeMixin):
+    """Fields used to create a ConfigFileType that are not in the DB."""
+
+
+class ConfigFileType(DataNodeTemplate, ConfigFileTypeMixin):
     """ConfigFileType response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name"]
 
-    id_: int = Field(..., gt=0)
-
-
-class ConfigDictTypeBase(BaseModel):
-    """Model for a type of dict that contains configuration."""
-
-    name: str = Field(..., description="Name of the config dict type")
+class ConfigFileMixin:
+    """Mixin class for a DataNode that is a configuration file."""
 
 
-class ConfigDictTypeCreate(ConfigDictTypeBase):
-    """Fields used to create a ConfigDictType."""
+class ConfigFileCreate(DataNodeCreate, ConfigFileMixin):
+    """Fields used to create a ConfigFile that are not in the DB."""
 
 
-class ConfigDictType(ConfigDictTypeBase):
+class ConfigFile(DataNode, ConfigFileMixin):
+    """ConfigFile response model."""
+
+
+# ConfigDict
+
+class ConfigDictTypeMixin:
+    """Mixin class for a DataNodeTemplate that is a configuraiton dict."""
+
+
+class ConfigDictTypeCreate(DataNodeTemplateCreate, ConfigDictTypeMixin):
+    """Fields used to create a ConfigDictType that are not in the DB."""
+
+
+class ConfigDictType(DataNodeTemplate, ConfigDictTypeMixin):
     """ConfigDictType response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name"]
 
-    id_: int = Field(..., gt=0)
-
-
-class ParameterBase(BaseModel):
-    """Model for a parameter definition."""
-
-    name: str = Field(..., description="Name of the parameter")
+class ConfigDictMixin:
+    """Mixin class for a DataNode that is a configuraiton dict."""
 
 
-class ParameterCreate(ParameterBase):
-    """Fields used to create a Parameter."""
+class ConfigDictCreate(DataNodeCreate, ConfigDictMixin):
+    """Fields used to create a ConfigDict that are not in the DB."""
 
 
-class Parameter(ParameterBase):
+class ConfigDict(DataNode, ConfigDictMixin):
+    """ConfigDict response model."""
+
+
+# Parameter
+
+class ParameterTypeMixin:
+    """Mixin class for a DataNodeTemplate that is simple parameter."""
+
+
+class ParameterTypeCreate(DataNodeTemplateCreate, ParameterTypeMixin):
+    """Includes fields used to create a ParameterType that are not in the DB."""
+
+
+class ParameterType(DataNodeTemplate, ParameterTypeMixin):
     """Parameter response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name"]
 
-    id_: int = Field(..., gt=0)
-
-
-class ArrayBase(BaseModel):
-    """Model for an array definition."""
-
-    name: str = Field(..., description="Name of the array")
-    n_dim: int = Field(..., description="Number of dimensions")
-    shape: list[int] = Field(..., description="Shape of the array")
+class ParameterMixin:
+    """Mixin class for a DataNode that is simple parameter."""
 
 
-class ArrayCreate(ArrayBase):
-    """Fields used to create an Array."""
+class ParameterCreate(DataNodeCreate, ParameterMixin):
+    """Includes fields used to create a Parameter that are not in the DB."""
 
 
-class Array(ArrayBase):
+class Parameter(DataNode, ParameterMixin):
+    """Parameter response model."""
+
+
+# Array
+
+class ArrayTypeMixin:
+    """Mixin class for a DataNodeTemplate that is an array."""
+
+
+class ArrayTypeCreate(DataNodeTemplateCreate, ArrayTypeMixin):
+    """Includes fields used to create a ArrayType that are not in the DB."""
+
+
+class ArrayType(DataNodeTemplateCreate, ArrayTypeMixin):
+    """ArrayType response model."""
+
+
+class ArrayMixin:
+    """Mixin class for a DataNode that is an array."""
+
+
+class ArrayCreate(DataNodeCreate, ArrayMixin):
+    """Includes fields used to create an Array that are not in the DB."""
+
+
+class Array(DataNodeCreate, ArrayMixin):
     """Array response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name", "n_dim", "shape"]
 
-    id_: int = Field(..., gt=0)
+# Class
 
-
-class ClassBase(BaseModel):
-    """Model for a Python class definition."""
-
-    name: str = Field(..., description="Name of the class")
-    module_: str = Field(..., description="Python module where it lives")
+class ClassMixin:
+    """Mixin class for a DataNodeTemplate that is a python class."""
 
 
-class ClassCreate(ClassBase):
-    """Fields used to create a Class."""
+class ClassCreate(DataNodeTemplateCreate, ClassMixin):
+    """Includes fields used to create a Class that are not in the DB."""
 
 
-class Class(ClassBase):
+class Class(DataNodeTemplate, ClassMixin):
     """Class response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name", "module_"]
 
-    id_: int = Field(..., gt=0)
+class ClassInstanceMixin:
+    """Mixin class for a DataNode that is a python class."""
+
+
+class ClassInstanceCreate(DataNodeCreate, ClassInstanceMixin):
+    """Includes fields used to create a ClassInstance that are not in the DB."""
+
+
+class ClassInstance(DataNode, ClassInstanceMixin):
+    """ClassInstance response model."""

@@ -5,63 +5,86 @@ from typing import ClassVar
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class PythonFunctionBase(BaseModel):
-    """Model for a python function."""
+# Python Fuction
 
-    name: str = Field(..., description="Name of the function")
+class PythonFunctionMixin:
+    """Mixin class for a FunctionNodeTemplate that is a python function."""
+
     module_: str = Field(..., description="Module where it lives")
 
 
-class PythonFunctionCreate(PythonFunctionBase):
-    """Fields used to create a PythonFunction."""
+class PythonFunctionCreate(FunctionNodeTemplateCreate, PythonFunctionMixin):
+    """Fields used to create a PythonFunction that are not in the DB."""
 
 
-class PythonFunction(PythonFunctionBase):
+class PythonFunction(FunctionNodeTemplate, PythonFunctionMixin):
     """PythonFunction response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name", "module_"]
 
-    id_: int = Field(..., gt=0)
+class PythonFunctionCallMixin:
+    """Mixin class for a FunctionNode that is a call to a python function."""
+
+    
+class PythonFunctionCallCreate(FunctionNodeCreate, PythonFunctionCallMixin):
+    """Fields used to create a PythonFunctionCall that are not in the DB."""
 
 
-class MemberFunctionBase(BaseModel):
-    """Model for a member function."""
+class PythonFunctionCall(FunctionNode, PythonFunctionCallMixin):
+    """PythonFunctionCall response model."""
+
+
+# Member Fuction    
+
+class MemberFunctionMixin:
+    """Mixin class for a FunctionNodeTemplate that is a member function."""
 
     name: str = Field(..., description="Name of the function")
 
 
-class MemberFunctionCreate(MemberFunctionBase):
-    """Fields used to create a MemberFunction."""
-
-    class_name: str | None = Field(default=None, description="Name of the owning class")
-    class_id: int | None = Field(default=None, description="ID of the owning class")
+class MemberFunctionCreate(FunctionNodeTemplateCreate, MemberFunctionMixin):
+    """Fields used to create a MemberFunction that are not in the DB."""
 
 
-class MemberFunction(MemberFunctionBase):
+class MemberFunction(FunctionNodeTemplate, MemberFunctionMixin):
     """MemberFunction response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name", "class_id"]
-
-    id_: int = Field(..., gt=0)
     class_id: int = Field(..., description="Foreign key into class table")
 
 
-class ShellFunctionBase(BaseModel):
-    """Model for a shell function/script."""
-
-    name: str = Field(..., description="Name of the shell function")
+class MemberFunctionCallMixin:
+    """Mixin class for a FunctionNodeTemplate that is a call to a member function."""
 
 
-class ShellFunctionCreate(ShellFunctionBase):
-    """Fields used to create a ShellFunction."""
+class MemberFunctionCallCreate(FunctionNodeCreate, MemberFunctionCallMixin):
+    """Fields used to create a MemberFunction that are not in the DB."""
 
 
-class ShellFunction(ShellFunctionBase):
+class MemberFunctionCall(FunctionNode, MemberFunctionCallMixin):
+    """MemberFunctionCal response model."""
+
+
+    
+# Shell function    
+
+class ShellFunctionMixin:
+    """Mixin class for a FunctionNodeTemplate that is a shell script."""
+
+
+class ShellFunctionCreate(FunctionNodeTemplateCreate, ShellFunctionMixin):
+    """Fields used to create a ShellFunction that are not in the DB."""
+
+
+class ShellFunction(FunctionNodeTemplateCreate, ShellFunctionMixin):
     """ShellFunction response model."""
 
-    model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["id_", "name"]
 
-    id_: int = Field(..., gt=0)
+class ShellFunctionCallMixin:
+    """Mixin class for a FunctionNode that is a shell script."""
+
+
+class ShellFunctionCallCreate(FunctionNodeCreate, ShellFunctionCallMixin):
+    """Fields used to create a ShellFunction that are not in the DB."""
+
+
+class ShellFunctionCall(FunctionNodeCreate, ShellFunctionCallMixin):
+    """ShellFunctionCall response model."""
