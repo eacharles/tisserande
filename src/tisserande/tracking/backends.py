@@ -11,6 +11,8 @@ import itertools
 from typing import Any, Protocol
 from uuid import UUID
 
+from tisserande.db.utils import uuid7
+
 
 class TrackingBackend(Protocol):
     """Protocol for provenance storage backends."""
@@ -50,9 +52,7 @@ class NullBackend:
     _counter = itertools.count(1)
 
     def create_node(self, **kwargs: Any) -> UUID:  # pylint: disable=unused-argument
-        import uuid
-
-        return uuid.uuid4()
+        return uuid7()
 
     def update_node(self, node_id: UUID, **kwargs: Any) -> None:  # pylint: disable=unused-argument
         pass
