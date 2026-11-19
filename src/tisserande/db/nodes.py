@@ -1,48 +1,60 @@
-"""ORM models for provenance graph nodes using joined-table inheritance.
+"""ORM tables for runtime Node instances.
 
-Base Node holds shared columns (id, type discriminator, execution_id, arg_name).
-Each node type has its own subtable with type-specific columns. Edges and executions
-still FK to the base node table, keeping graph queries simple.
+``Node`` is the joined-table inheritance base; it holds shared columns for all
+node instances.  Each concrete sub-type adds its own subtable with
+type-specific columns.
+
+Data node sub-types (each adds creator/timestamp fields plus type-specific
+payload): ``DataFile``, ``ConfigFile``, ``ConfigDict``, ``Parameter``,
+``Array``, ``ClassInstance``.
+
+Function call sub-types (each adds execution-lifecycle fields plus
+type-specific payload): ``PythonFunctionCall``, ``MemberFunctionCall``,
+``ShellFunctionCall``.
 """
 
-from __future__ import annotations
-
 import uuid
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel
-from sqlalchemy import JSON, Float, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy.orm import Mapped, declared_attr, mapped_column
 
 from .. import models
 from .base import Base
 from .utils import uuid7 as _uuid7
 
 
+# ---------------------------------------------------------------------------
+# Base Node table
+# ---------------------------------------------------------------------------
+
+
 class Node(Base):
-    """Base ORM table for all provenance graph nodes."""
+    """ORM base table for all runtime Node instances (UUID7 PK).
+
+    ``node_type`` is the joined-table inheritance discriminator; its values
+    match ``NodeType`` enum strings.  ``node_template_id`` optionally links
+    this instance to its reusable type definition.
+    """
 
     __tablename__ = "node"
     __mapper_args__ = {
-        "polymorphic_on": "type_",
+        "polymorphic_on": "node_type",
         "polymorphic_identity": "base",
         "with_polymorphic": "*",
     }
 
-    id_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
-    type_: Mapped[str] = mapped_column(String(50), index=True)
-    execution_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("execution.id_"),
-        nullable=True,
-        index=True,
+    uid_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
+    node_type: Mapped[str] = mapped_column(String(50), index=True)
+    node_template_id: Mapped[int | None] = mapped_column(
+        ForeignKey("node_template.id_"), nullable=True, index=True
     )
-    arg_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        from ..models.nodes import NodeBase
-
-        return NodeBase
+        return models.NodeCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
@@ -58,235 +70,282 @@ class Node(Base):
         return pydantic_class.model_validate(row, from_attributes=True)
 
 
-class DataFileNode(Node):
-    """ORM table for data file nodes."""
+# ---------------------------------------------------------------------------
+# Data node sub-types
+# ---------------------------------------------------------------------------
 
-    __tablename__ = "data_file_node"
+
+class DataFile(Node):
+    """ORM subtable for data file node instances."""
+
+    __tablename__ = "data_file"
     __mapper_args__ = {"polymorphic_identity": "data_file"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
-    data_file_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("data_file_type.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    file_path: Mapped[str] = mapped_column(String(1024))
+    file_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    hash_algorithm: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    file_size_bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.DataFileNodeCreate
+        return models.DataFileCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.DataFileNode
+        return models.DataFile
 
     @classmethod
     def class_string(cls) -> str:
-        return "data_file_node"
+        return cls.__tablename__
 
 
-class ConfigFileNode(Node):
-    """ORM table for config file nodes."""
+class ConfigFile(Node):
+    """ORM subtable for configuration file node instances."""
 
-    __tablename__ = "config_file_node"
+    __tablename__ = "config_file"
     __mapper_args__ = {"polymorphic_identity": "config_file"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
-    config_file_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("config_file_type.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    file_path: Mapped[str] = mapped_column(String(1024))
+    file_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    hash_algorithm: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    file_size_bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ConfigFileNodeCreate
+        return models.ConfigFileCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ConfigFileNode
+        return models.ConfigFile
 
     @classmethod
     def class_string(cls) -> str:
-        return "config_file_node"
+        return cls.__tablename__
 
 
-class ConfigDictNode(Node):
-    """ORM table for config dict nodes."""
+class ConfigDict(Node):
+    """ORM subtable for configuration dictionary node instances."""
 
-    __tablename__ = "config_dict_node"
+    __tablename__ = "config_dict"
     __mapper_args__ = {"polymorphic_identity": "config_dict"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    config_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
-    config_dict_type_id: Mapped[int | None] = mapped_column(
-        ForeignKey("config_dict_type.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    config_data: Mapped[dict] = mapped_column(JSON)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ConfigDictNodeCreate
+        return models.ConfigDictCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ConfigDictNode
+        return models.ConfigDict
 
     @classmethod
     def class_string(cls) -> str:
-        return "config_dict_node"
+        return cls.__tablename__
 
 
-class ParameterNode(Node):
-    """ORM table for parameter nodes."""
+class Parameter(Node):
+    """ORM subtable for scalar parameter node instances."""
 
-    __tablename__ = "parameter_node"
+    __tablename__ = "parameter"
     __mapper_args__ = {"polymorphic_identity": "parameter"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    value_float: Mapped[float | None] = mapped_column(Float, nullable=True)
-    value_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
-    parameter_id: Mapped[int | None] = mapped_column(
-        ForeignKey("parameter.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    value: Mapped[float] = mapped_column()
+    units: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ParameterNodeCreate
+        return models.ParameterCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ParameterNode
+        return models.Parameter
 
     @classmethod
     def class_string(cls) -> str:
-        return "parameter_node"
+        return cls.__tablename__
 
 
-class ArrayNode(Node):
-    """ORM table for array nodes."""
+class Array(Node):
+    """ORM subtable for array node instances."""
 
-    __tablename__ = "array_node"
+    __tablename__ = "array"
     __mapper_args__ = {"polymorphic_identity": "array"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    value_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
-    array_id: Mapped[int | None] = mapped_column(
-        ForeignKey("array.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    shape: Mapped[list] = mapped_column(JSON)
+    dtype: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    file_path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    value_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ArrayNodeCreate
+        return models.ArrayCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ArrayNode
+        return models.Array
 
     @classmethod
     def class_string(cls) -> str:
-        return "array_node"
+        return cls.__tablename__
 
 
-class ObjectNode(Node):
-    """ORM table for object nodes."""
+class ClassInstance(Node):
+    """ORM subtable for Python class instance node instances."""
 
-    __tablename__ = "object_node"
-    __mapper_args__ = {"polymorphic_identity": "object"}
+    __tablename__ = "class_instance"
+    __mapper_args__ = {"polymorphic_identity": "class_instance"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    value_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
-    class_id: Mapped[int | None] = mapped_column(
-        ForeignKey("class.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    creator: Mapped[str] = mapped_column(String(255))
+    create_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    update_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    delete_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    ctor_values_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ObjectNodeCreate
+        return models.ClassInstanceCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ObjectNode
+        return models.ClassInstance
 
     @classmethod
     def class_string(cls) -> str:
-        return "object_node"
+        return cls.__tablename__
 
 
-class PythonFunctionNode(Node):
-    """ORM table for python function nodes."""
+# ---------------------------------------------------------------------------
+# Function call sub-types
+# ---------------------------------------------------------------------------
 
-    __tablename__ = "python_function_node"
-    __mapper_args__ = {"polymorphic_identity": "python_function"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    python_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("python_function.id_"),
-        nullable=True,
-    )
+class PythonFunctionCall(Node):
+    """ORM subtable for Python function call node instances."""
+
+    __tablename__ = "python_function_call"
+    __mapper_args__ = {"polymorphic_identity": "python_function_call"}
+
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    end_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    exception_type: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    exception_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    args_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    kwargs_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    return_value_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    source_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.PythonFunctionNodeCreate
+        return models.PythonFunctionCallCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.PythonFunctionNode
+        return models.PythonFunctionCall
 
     @classmethod
     def class_string(cls) -> str:
-        return "python_function_node"
+        return cls.__tablename__
 
 
-class MemberFunctionNode(Node):
-    """ORM table for member function nodes."""
+class MemberFunctionCall(Node):
+    """ORM subtable for class method call node instances.
 
-    __tablename__ = "member_function_node"
-    __mapper_args__ = {"polymorphic_identity": "member_function"}
+    ``instance_node_id`` is a self-referential FK to the ``node`` table,
+    pointing to the ``ClassInstance`` node that was ``self`` for this call.
+    ``inherit_condition`` is required because two FKs reference ``node.uid_``.
+    """
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    member_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("member_function.id_"),
-        nullable=True,
+    __tablename__ = "member_function_call"
+
+    @declared_attr.directive
+    def __mapper_args__(cls) -> dict[str, Any]:  # noqa: N805
+        return {
+            "polymorphic_identity": "member_function_call",
+            "inherit_condition": cls.__table__.c.uid_ == Node.__table__.c.uid_,
+        }
+
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    end_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    exception_type: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    exception_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    instance_node_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("node.uid_"), nullable=True, index=True
     )
+    args_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    kwargs_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    return_value_json: Mapped[Any | None] = mapped_column(JSON, nullable=True)
+    source_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.MemberFunctionNodeCreate
+        return models.MemberFunctionCallCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.MemberFunctionNode
+        return models.MemberFunctionCall
 
     @classmethod
     def class_string(cls) -> str:
-        return "member_function_node"
+        return cls.__tablename__
 
 
-class ShellFunctionNode(Node):
-    """ORM table for shell function nodes."""
+class ShellFunctionCall(Node):
+    """ORM subtable for shell script invocation node instances."""
 
-    __tablename__ = "shell_function_node"
-    __mapper_args__ = {"polymorphic_identity": "shell_function"}
+    __tablename__ = "shell_function_call"
+    __mapper_args__ = {"polymorphic_identity": "shell_function_call"}
 
-    id_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.id_"), primary_key=True)
-    shell_function_id: Mapped[int | None] = mapped_column(
-        ForeignKey("shell_function.id_"),
-        nullable=True,
-    )
+    uid_: Mapped[uuid.UUID] = mapped_column(ForeignKey("node.uid_"), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    end_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    exception_type: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    exception_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    command: Mapped[str | None] = mapped_column(Text, nullable=True)
+    return_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    stdout: Mapped[str | None] = mapped_column(Text, nullable=True)
+    stderr: Mapped[str | None] = mapped_column(Text, nullable=True)
+    working_dir: Mapped[str | None] = mapped_column(String(1024), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
-        return models.ShellFunctionNodeCreate
+        return models.ShellFunctionCallCreate
 
     @classmethod
     def pydantic_model_class(cls) -> type[BaseModel]:
-        return models.ShellFunctionNode
+        return models.ShellFunctionCall
 
     @classmethod
     def class_string(cls) -> str:
-        return "shell_function_node"
-
-
+        return cls.__tablename__

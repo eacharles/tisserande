@@ -1,3 +1,4 @@
+import enum
 from typing import Any
 
 from macon import db_funcs
@@ -8,71 +9,45 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from structlog import get_logger
 
 from .. import models
-from ..db import data_types as db_data
-from ..db import function_types as db_func
+from ..db.node_templates import NodeTemplate
 from ..db.nodes import (
-    ArrayNode,
-    ConfigDictNode,
-    ConfigFileNode,
-    DataFileNode,
-    MemberFunctionNode,
+    Array,
+    ClassInstance,
+    ConfigDict,
+    ConfigFile,
+    DataFile,
+    MemberFunctionCall,
     Node,
-    ObjectNode,
-    ParameterNode,
-    PythonFunctionNode,
-    ShellFunctionNode,
+    Parameter,
+    PythonFunctionCall,
+    ShellFunctionCall,
 )
 from ..models.types import NodeType
 
 logger = get_logger(__name__)
 
-_TYPE_FK_MAP: dict[str, tuple[str, str, type]] = {
-    NodeType.DATA_FILE.value: ("data_file_type_name", "data_file_type_id", db_data.DataFileType),
-    NodeType.CONFIG_FILE.value: ("config_file_type_name", "config_file_type_id", db_data.ConfigFileType),
-    NodeType.CONFIG_DICT.value: ("config_dict_type_name", "config_dict_type_id", db_data.ConfigDictType),
-    NodeType.PARAMETER.value: ("parameter_name", "parameter_id", db_data.Parameter),
-    NodeType.ARRAY.value: ("array_name", "array_id", db_data.Array),
-    NodeType.OBJECT.value: ("class_name", "class_id", db_data.Class),
-    NodeType.PYTHON_FUNCTION.value: (
-        "python_function_name",
-        "python_function_id",
-        db_func.PythonFunction,
-    ),
-    NodeType.MEMBER_FUNCTION.value: (
-        "member_function_name",
-        "member_function_id",
-        db_func.MemberFunction,
-    ),
-    NodeType.SHELL_FUNCTION.value: (
-        "shell_function_name",
-        "shell_function_id",
-        db_func.ShellFunction,
-    ),
-}
-
 _TYPE_DB_CLASS_MAP: dict[str, type[Node]] = {
-    NodeType.DATA_FILE.value: DataFileNode,
-    NodeType.CONFIG_FILE.value: ConfigFileNode,
-    NodeType.CONFIG_DICT.value: ConfigDictNode,
-    NodeType.PARAMETER.value: ParameterNode,
-    NodeType.ARRAY.value: ArrayNode,
-    NodeType.OBJECT.value: ObjectNode,
-    NodeType.PYTHON_FUNCTION.value: PythonFunctionNode,
-    NodeType.MEMBER_FUNCTION.value: MemberFunctionNode,
-    NodeType.SHELL_FUNCTION.value: ShellFunctionNode,
+    NodeType.DATA_FILE.value: DataFile,
+    NodeType.CONFIG_FILE.value: ConfigFile,
+    NodeType.CONFIG_DICT.value: ConfigDict,
+    NodeType.PARAMETER.value: Parameter,
+    NodeType.ARRAY.value: Array,
+    NodeType.CLASS_INSTANCE.value: ClassInstance,
+    NodeType.PYTHON_FUNCTION_CALL.value: PythonFunctionCall,
+    NodeType.MEMBER_FUNCTION_CALL.value: MemberFunctionCall,
+    NodeType.SHELL_FUNCTION_CALL.value: ShellFunctionCall,
 }
-
 
 _TYPE_CREATE_MODEL_MAP: dict[str, type[BaseModel]] = {
-    NodeType.DATA_FILE.value: models.DataFileNodeCreate,
-    NodeType.CONFIG_FILE.value: models.ConfigFileNodeCreate,
-    NodeType.CONFIG_DICT.value: models.ConfigDictNodeCreate,
-    NodeType.PARAMETER.value: models.ParameterNodeCreate,
-    NodeType.ARRAY.value: models.ArrayNodeCreate,
-    NodeType.OBJECT.value: models.ObjectNodeCreate,
-    NodeType.PYTHON_FUNCTION.value: models.PythonFunctionNodeCreate,
-    NodeType.MEMBER_FUNCTION.value: models.MemberFunctionNodeCreate,
-    NodeType.SHELL_FUNCTION.value: models.ShellFunctionNodeCreate,
+    NodeType.DATA_FILE.value: models.DataFileCreate,
+    NodeType.CONFIG_FILE.value: models.ConfigFileCreate,
+    NodeType.CONFIG_DICT.value: models.ConfigDictCreate,
+    NodeType.PARAMETER.value: models.ParameterCreate,
+    NodeType.ARRAY.value: models.ArrayCreate,
+    NodeType.CLASS_INSTANCE.value: models.ClassInstanceCreate,
+    NodeType.PYTHON_FUNCTION_CALL.value: models.PythonFunctionCallCreate,
+    NodeType.MEMBER_FUNCTION_CALL.value: models.MemberFunctionCallCreate,
+    NodeType.SHELL_FUNCTION_CALL.value: models.ShellFunctionCallCreate,
 }
 
 
@@ -81,15 +56,15 @@ def register_node_type(
     db_class: type[Node],
     create_model: type[BaseModel],
 ) -> None:
-    """Register an external node type so it participates in polymorphic dispatch.
+    """Register an external node type for polymorphic dispatch.
 
-    Call this once during package initialisation (e.g. in your package's
-    ``__init__.py``) before any ``node.create_row()`` calls are made.
+    Call this once at package initialisation before any ``node.create_row()``
+    calls are made.
 
     Parameters
     ----------
     type_value:
-        The string discriminator stored in the ``node.type_`` column,
+        The string discriminator stored in the ``node.node_type`` column,
         e.g. ``"ceci_file"``.
     db_class:
         The SQLAlchemy ORM subclass of :class:`Node` whose
@@ -102,7 +77,7 @@ def register_node_type(
     _TYPE_CREATE_MODEL_MAP[type_value] = create_model
 
 
-class NodeOperations(TableOperations[Node, models.Node, models.AnyNodeCreate]):
+class NodeOperations(TableOperations[Node, models.Node, models.NodeCreate]):
     """Operations for the Node table with polymorphic dispatch and FK resolution."""
 
     async def get_create_kwargs(
@@ -110,23 +85,20 @@ class NodeOperations(TableOperations[Node, models.Node, models.AnyNodeCreate]):
         session: AsyncSession,
         **kwargs: Any,
     ) -> dict[str, Any]:
-        type_value = kwargs.get("type_")
-        if isinstance(type_value, NodeType):
-            type_value = type_value.value
-            kwargs["type_"] = type_value
+        # Coerce all enum values to their string/value representation for SQLAlchemy.
+        for key in list(kwargs.keys()):
+            if isinstance(kwargs[key], enum.Enum):
+                kwargs[key] = kwargs[key].value
 
-        if type_value and type_value in _TYPE_FK_MAP:
-            name_field, id_field, db_class = _TYPE_FK_MAP[type_value]
-            name_val = kwargs.pop(name_field, None)
-            id_val = kwargs.get(id_field)
-            if name_val and not id_val:
-                resolved_id, _ = await db_funcs.read.lookup_by_id_or_name(
-                    db_class,
-                    session,
-                    None,
-                    name_val,
-                )
-                kwargs[id_field] = resolved_id
+        node_template_name = kwargs.pop("node_template_name", None)
+        if node_template_name and not kwargs.get("node_template_id"):
+            resolved_id, _ = await db_funcs.read.lookup_by_id_or_name(
+                NodeTemplate,
+                session,
+                None,
+                node_template_name,
+            )
+            kwargs["node_template_id"] = resolved_id
 
         return kwargs
 
@@ -144,10 +116,10 @@ class NodeOperations(TableOperations[Node, models.Node, models.AnyNodeCreate]):
 
         if validate:
             try:
-                type_value_for_validation = kwargs.get("type_")
-                if isinstance(type_value_for_validation, NodeType):
-                    type_value_for_validation = type_value_for_validation.value
-                create_model = _TYPE_CREATE_MODEL_MAP.get(type_value_for_validation)  # type: ignore[arg-type]
+                type_value = kwargs.get("node_type")
+                if isinstance(type_value, NodeType):
+                    type_value = type_value.value
+                create_model = _TYPE_CREATE_MODEL_MAP.get(type_value)  # type: ignore[arg-type]
                 if create_model is not None:
                     create_model.model_validate(kwargs)
             except ValidationError as e:
@@ -156,10 +128,10 @@ class NodeOperations(TableOperations[Node, models.Node, models.AnyNodeCreate]):
 
         kwargs = await self.get_create_kwargs(session, **kwargs)
 
-        type_value = kwargs.get("type_")
+        type_value = kwargs.get("node_type")
         db_class = _TYPE_DB_CLASS_MAP.get(type_value, Node)  # type: ignore[arg-type]
 
-        # Collect columns from all levels of the inheritance hierarchy (handles 3-level inheritance).
+        # Collect columns from all levels of the inheritance hierarchy.
         valid_columns: set[str] = set()
         for klass in db_class.__mro__:
             tbl = getattr(klass, "__table__", None)

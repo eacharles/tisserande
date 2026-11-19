@@ -23,27 +23,27 @@ class ConfigDictTypeLocalOperations(
     """Async session-managed operations for config dict types."""
 
 
-class ParameterLocalOperations(
-    LocalOperations[db.Parameter, models.Parameter, models.ParameterCreate],
+class ParameterTypeLocalOperations(
+    LocalOperations[db.ParameterType, models.ParameterType, models.ParameterTypeCreate],
 ):
-    """Async session-managed operations for parameters."""
+    """Async session-managed operations for parameter types."""
 
 
-class ArrayLocalOperations(
-    LocalOperations[db.Array, models.Array, models.ArrayCreate],
+class ArrayTypeLocalOperations(
+    LocalOperations[db.ArrayType, models.ArrayType, models.ArrayTypeCreate],
 ):
-    """Async session-managed operations for arrays."""
+    """Async session-managed operations for array types."""
 
 
-class ClassLocalOperations(
-    LocalOperations[db.Class, models.Class, models.ClassCreate],
+class ClassTypeLocalOperations(
+    LocalOperations[db.ClassType, models.Class, models.ClassCreate],
 ):
-    """Async session-managed operations for classes."""
+    """Async session-managed operations for Python class types."""
 
 
 data_file_type = DataFileTypeLocalOperations(ops.data_file_type)
 config_file_type = ConfigFileTypeLocalOperations(ops.config_file_type)
 config_dict_type = ConfigDictTypeLocalOperations(ops.config_dict_type)
-parameter = ParameterLocalOperations(ops.parameter)
-array = ArrayLocalOperations(ops.array)
-class_ = ClassLocalOperations(ops.class_)
+parameter_type = ParameterTypeLocalOperations(ops.parameter_type)
+array_type = ArrayTypeLocalOperations(ops.array_type)
+class_type = ClassTypeLocalOperations(ops.class_type)

@@ -225,30 +225,21 @@ def track_shell(
 
     from .inspector import _classify_by_value, build_node_kwargs
 
-    execution_id = be.create_execution(
+    function_node_id = be.create_node(
+        node_type=NodeType.SHELL_FUNCTION_CALL,
         status=ExecutionStatus.RUNNING,
         start_time=datetime.now(UTC),
     )
 
-    function_node_id = be.create_node(
-        type_=NodeType.SHELL_FUNCTION,
-        execution_id=execution_id,
-        arg_name=None,
-    )
-
-    be.update_execution(execution_id, function_node_id=function_node_id)
-
     if inputs:
-        for name, value in inputs.items():
+        for _name, value in inputs.items():
             node_type = _classify_by_value(value)
-            kwargs = build_node_kwargs(name, node_type, value)
-            kwargs["execution_id"] = execution_id
+            kwargs = build_node_kwargs(node_type, value, "track_shell")
             input_node_id = be.create_node(**kwargs)
-            be.create_edge(from_id=input_node_id, to_id=function_node_id, execution_id=execution_id)
+            be.create_edge(from_id=input_node_id, to_id=function_node_id)
 
     import time
 
-    start = time.time()
     result = subprocess.run(
         command,
         shell=isinstance(command, str),
@@ -256,27 +247,22 @@ def track_shell(
         text=True,
         check=False,
     )
-    elapsed = time.time() - start
 
     if result.returncode != 0:
-        be.update_execution(
-            execution_id,
+        be.update_node(
+            function_node_id,
             status=ExecutionStatus.FAILURE,
-            duration_seconds=elapsed,
             end_time=datetime.now(UTC),
-            error_message=result.stderr or f"Exit code {result.returncode}",
+            exception_message=result.stderr or f"Exit code {result.returncode}",
         )
         return result
 
     if outputs:
-        for name, value in outputs.items():
+        for _name, value in outputs.items():
             node_type = _classify_by_value(value)
-            kwargs = build_node_kwargs(name, node_type, value)
-            kwargs["execution_id"] = execution_id
+            kwargs = build_node_kwargs(node_type, value, "track_shell")
             output_node_id = be.create_node(**kwargs)
-            be.create_edge(from_id=function_node_id, to_id=output_node_id, execution_id=execution_id)
+            be.create_edge(from_id=function_node_id, to_id=output_node_id)
 
-    be.update_execution(
-        execution_id, status=ExecutionStatus.SUCCESS, duration_seconds=elapsed, end_time=datetime.now(UTC)
-    )
+    be.update_node(function_node_id, status=ExecutionStatus.SUCCESS, end_time=datetime.now(UTC))
     return result

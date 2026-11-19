@@ -19,7 +19,7 @@ class TestLocalCli:
         result = runner.invoke(cli, ["--help"])
         assert "node" in result.output
         assert "edge" in result.output
-        assert "execution" in result.output
+        assert "graph" in result.output
         assert "data-file-type" in result.output
 
 

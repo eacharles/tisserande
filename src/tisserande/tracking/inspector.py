@@ -43,38 +43,37 @@ def _classify_by_value(value: Any) -> NodeType:
     if isinstance(value, (list, tuple)):
         if value and all(isinstance(v, (int, float)) for v in value):
             return NodeType.ARRAY
-        return NodeType.OBJECT
-    return NodeType.OBJECT
+        return NodeType.CLASS_INSTANCE
+    return NodeType.CLASS_INSTANCE
 
 
 def build_node_kwargs(
-    param_name: str,
     node_type: NodeType,
     value: Any,
+    creator: str,
 ) -> dict[str, Any]:
     """Build kwargs dict for creating a Node row."""
-    kwargs: dict[str, Any] = {
-        "type_": node_type,
-        "arg_name": param_name,
-    }
+    kwargs: dict[str, Any] = {"node_type": node_type}
 
-    if node_type == NodeType.DATA_FILE:
-        kwargs["path"] = str(value)
-    elif node_type == NodeType.CONFIG_FILE:
-        kwargs["path"] = str(value)
+    if node_type in (NodeType.DATA_FILE, NodeType.CONFIG_FILE):
+        kwargs["file_path"] = str(value)
+        kwargs["creator"] = creator
     elif node_type == NodeType.CONFIG_DICT:
         kwargs["config_data"] = value
+        kwargs["creator"] = creator
     elif node_type == NodeType.PARAMETER:
-        kwargs["value_float"] = float(value) if isinstance(value, (int, float)) else None
-        if kwargs["value_float"] is None:
-            kwargs["value_json"] = value
+        kwargs["value"] = float(value) if isinstance(value, (int, float)) else 0.0
+        kwargs["creator"] = creator
     elif node_type == NodeType.ARRAY:
-        kwargs["value_json"] = list(value) if not isinstance(value, list) else value
-    elif node_type == NodeType.OBJECT:
         try:
-            kwargs["value_json"] = value
-        except (TypeError, ValueError):  # pragma: no cover
-            kwargs["value_json"] = str(value)
+            import numpy as np
+
+            kwargs["shape"] = list(value.shape) if isinstance(value, np.ndarray) else [len(value)]
+        except (ImportError, TypeError):
+            kwargs["shape"] = []
+        kwargs["creator"] = creator
+    elif node_type == NodeType.CLASS_INSTANCE:
+        kwargs["creator"] = creator
 
     return kwargs
 
@@ -98,6 +97,10 @@ class ArgumentInspector:
     @property
     def function_module(self) -> str:
         return self._func.__module__
+
+    @property
+    def _creator(self) -> str:
+        return f"{self._func.__module__}.{self._func.__name__}"
 
     def classify_argument(self, param_name: str, value: Any) -> NodeType | None:
         """Determine NodeType for a parameter from annotation or value heuristics.
@@ -128,12 +131,11 @@ class ArgumentInspector:
 
     def build_node_kwargs(
         self,
-        param_name: str,
         node_type: NodeType,
         value: Any,
     ) -> dict[str, Any]:
         """Build kwargs dict for creating a Node row."""
-        return build_node_kwargs(param_name, node_type, value)
+        return build_node_kwargs(node_type, value, self._creator)
 
     def build_input_specs(
         self,
@@ -155,7 +157,7 @@ class ArgumentInspector:
             if node_type is None:
                 continue
 
-            spec = self.build_node_kwargs(name, node_type, value)
+            spec = self.build_node_kwargs(node_type, value)
             specs.append(spec)
 
         return specs
@@ -167,9 +169,9 @@ class ArgumentInspector:
 
         if isinstance(result, tuple):
             specs = []
-            for i, val in enumerate(result):
+            for val in result:
                 node_type = _classify_by_value(val)
-                spec = self.build_node_kwargs(f"return_{i}", node_type, val)
+                spec = self.build_node_kwargs(node_type, val)
                 specs.append(spec)
             return specs
 
@@ -177,5 +179,5 @@ class ArgumentInspector:
         if return_type is None:
             return []
 
-        spec = self.build_node_kwargs("return", return_type, result)
+        spec = self.build_node_kwargs(return_type, result)
         return [spec]

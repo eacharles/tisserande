@@ -1,4 +1,17 @@
-"""Pydantic models for associating nodes to provenance graphs."""
+"""Pydantic models for associating nodes to graphs.
+
+Two parallel sets of models exist:
+
+* ``AssocTemplate`` — records that a NodeTemplate is a participant in a
+  GraphTemplate (int FKs, int PK).
+* ``Association`` — records that a runtime Node participated in an executed
+  Graph (UUID FKs, no surrogate PK — the (node_id, graph_id) pair is the
+  natural key).
+
+Associations capture graph membership separately from edges so that a node
+can be part of a graph without being directly connected to any other node
+(e.g. an isolated configuration node attached to a graph for audit purposes).
+"""
 
 from typing import ClassVar
 from uuid import UUID
@@ -7,33 +20,38 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class AssocTemplateBase(BaseModel):
-    """Model for associations a NodeTempalte to a GraphTemplate"""
-    node_template_id: int = Field(..., description="NodeTemplate in question")
-    graph_template_id: int = Field(..., description="GraphTemplate in question")
+    """Base model for an association between a NodeTemplate and a GraphTemplate."""
+
+    node_template_id: int = Field(..., description="Primary key of the NodeTemplate.")
+    graph_template_id: int = Field(..., description="Primary key of the GraphTemplate.")
 
 
 class AssocTemplateCreate(AssocTemplateBase):
-    """Fields used to create am AssocTemplate that are not in the DB."""
+    """Creation model for an AssocTemplate."""
 
-    
+
 class AssocTemplate(AssocTemplateBase):
-    """EdgeTemplate response model."""
+    """AssocTemplate response model — includes the database-assigned primary key."""
 
+    model_config = ConfigDict(from_attributes=True)
+    col_names_for_table: ClassVar[list[str]] = ["id_", "node_template_id", "graph_template_id"]
+
+    id_: int = Field(..., gt=0, description="Auto-incremented primary key.")
 
 
 class AssociationBase(BaseModel):
-    """Model for a graph edge connecting two Nodes."""
+    """Base model for an association between a runtime Node and an executed Graph."""
 
-    node_id: UUID = Field(..., description="Node in question")
-    graph_id: UUID = Field(..., description="Graph in question")
+    node_id: UUID = Field(..., description="UUID of the Node.")
+    graph_id: UUID = Field(..., description="UUID of the Graph.")
 
 
 class AssociationCreate(AssociationBase):
-    """Fields used to create an Edge."""
+    """Creation model for an Association."""
 
 
 class Association(AssociationBase):
-    """Association response model."""
+    """Association response model — keyed by the (node_id, graph_id) pair."""
 
     model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["from_id", "to_id"]
+    col_names_for_table: ClassVar[list[str]] = ["node_id", "graph_id"]

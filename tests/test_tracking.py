@@ -2,6 +2,7 @@
 
 import pytest
 
+from tisserande.models.types import NodeType
 from tisserande.tracking import configure, track, track_shell
 from tisserande.tracking.annotations import DataFile, Param
 from tisserande.tracking.backends import NullBackend
@@ -15,8 +16,6 @@ class TestArgumentInspector:
             return x
 
         inspector = ArgumentInspector(fn)
-        from tisserande.models.types import NodeType
-
         assert inspector.classify_argument("x", 3.14) == NodeType.PARAMETER
 
     def test_classify_path(self):
@@ -24,8 +23,6 @@ class TestArgumentInspector:
             return path
 
         inspector = ArgumentInspector(fn)
-        from tisserande.models.types import NodeType
-
         assert inspector.classify_argument("path", "/tmp/data.fits") == NodeType.DATA_FILE
 
     def test_classify_dict(self):
@@ -33,8 +30,6 @@ class TestArgumentInspector:
             pass
 
         inspector = ArgumentInspector(fn)
-        from tisserande.models.types import NodeType
-
         assert inspector.classify_argument("cfg", {"key": "val"}) == NodeType.CONFIG_DICT
 
     def test_build_input_specs(self):
@@ -44,8 +39,8 @@ class TestArgumentInspector:
         inspector = ArgumentInspector(fn)
         specs = inspector.build_input_specs((1.0, 2.0), {})
         assert len(specs) == 2
-        assert specs[0]["arg_name"] == "x"
-        assert specs[1]["arg_name"] == "y"
+        assert specs[0]["node_type"] == NodeType.PARAMETER
+        assert specs[1]["node_type"] == NodeType.PARAMETER
 
     def test_build_output_specs(self):
         def fn() -> float:
@@ -54,7 +49,7 @@ class TestArgumentInspector:
         inspector = ArgumentInspector(fn)
         specs = inspector.build_output_specs(42.0)
         assert len(specs) == 1
-        assert specs[0]["arg_name"] == "return"
+        assert specs[0]["node_type"] == NodeType.PARAMETER
 
     def test_tuple_return(self):
         def fn() -> tuple:
