@@ -1,22 +1,29 @@
-"""ORM models for function type tables (PythonFunction, MemberFunction, ShellFunction)."""
+"""ORM tables for function-type NodeTemplate sub-types.
 
-from pydantic import BaseModel
-from sqlalchemy import ForeignKey, String, UniqueConstraint
+Each class inherits from ``NodeTemplate`` via SQLAlchemy joined-table
+inheritance and corresponds to one value of ``NodeTemplateType``.
+``PythonFunction`` and ``ShellFunction`` are independent sub-types;
+``MemberFunction`` additionally carries a FK to the ``ClassType`` that owns
+the method.
+"""
+
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
+from pydantic import BaseModel
 
 from .. import models
-from .base import Base
+from .node_templates import NodeTemplate
 
 
-class PythonFunction(Base):
-    """ORM table for Python function definitions."""
+class PythonFunction(NodeTemplate):
+    """ORM table for the PythonFunction node template sub-type."""
 
     __tablename__ = "python_function"
-    __table_args__ = (UniqueConstraint("name", "module_", name="uq_python_function_name_module"),)
+    __mapper_args__ = {"polymorphic_identity": "python_function"}
 
-    id_: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), index=True)
-    module_: Mapped[str] = mapped_column(String(512))
+    id_: Mapped[int] = mapped_column(ForeignKey("node_template.id_"), primary_key=True)
+    module_: Mapped[str] = mapped_column(String(255))
+    is_async: Mapped[bool] = mapped_column(default=False)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
@@ -31,14 +38,19 @@ class PythonFunction(Base):
         return cls.__tablename__
 
 
-class MemberFunction(Base):
-    """ORM table for class member function definitions."""
+class MemberFunction(NodeTemplate):
+    """ORM table for the MemberFunction node template sub-type.
+
+    ``class_id`` is a FK to the ``class_type`` table that owns this method.
+    It allows queries like "find all methods belonging to this Python class".
+    """
 
     __tablename__ = "member_function"
+    __mapper_args__ = {"polymorphic_identity": "member_function"}
 
-    id_: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), index=True)
-    class_id: Mapped[int] = mapped_column(ForeignKey("class.id_"), index=True)
+    id_: Mapped[int] = mapped_column(ForeignKey("node_template.id_"), primary_key=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("class_type.id_"), index=True)
+    is_async: Mapped[bool] = mapped_column(default=False)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:
@@ -53,13 +65,15 @@ class MemberFunction(Base):
         return cls.__tablename__
 
 
-class ShellFunction(Base):
-    """ORM table for shell function/script definitions."""
+class ShellFunction(NodeTemplate):
+    """ORM table for the ShellFunction node template sub-type."""
 
     __tablename__ = "shell_function"
+    __mapper_args__ = {"polymorphic_identity": "shell_function"}
 
-    id_: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), index=True, unique=True)
+    id_: Mapped[int] = mapped_column(ForeignKey("node_template.id_"), primary_key=True)
+    script_path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    interpreter: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     @classmethod
     def pydantic_create_class(cls) -> type[BaseModel]:

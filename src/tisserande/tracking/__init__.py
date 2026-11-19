@@ -1,4 +1,4 @@
-from .annotations import ArrayArg, ConfigDict, ConfigFile, DataFile, ObjectArg, Param, Untracked
+from .annotations import ArrayArg, ClassInstanceArg, ConfigDict, ConfigFile, DataFile, Param, Untracked
 from .decorator import configure, get_backend, reset, track, track_async, track_shell
 
 __all__ = [
@@ -13,6 +13,6 @@ __all__ = [
     "ConfigDict",
     "Param",
     "ArrayArg",
-    "ObjectArg",
+    "ClassInstanceArg",
     "Untracked",
 ]

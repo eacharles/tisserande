@@ -3,12 +3,11 @@
 import uuid
 
 from tisserande.models import (
-    DataFileNodeCreate,
+    DataFileCreate,
     DataFileType,
     DataFileTypeCreate,
     EdgeCreate,
-    ExecutionCreate,
-    ParameterNodeCreate,
+    ParameterCreate,
     PythonFunction,
     PythonFunctionCreate,
 )
@@ -20,46 +19,46 @@ class TestNodeType:
         assert NodeType.DATA_FILE.is_data
         assert NodeType.CONFIG_FILE.is_data
         assert NodeType.PARAMETER.is_data
-        assert not NodeType.PYTHON_FUNCTION.is_data
+        assert not NodeType.PYTHON_FUNCTION_CALL.is_data
 
-    def test_logic_types(self):
-        assert NodeType.PYTHON_FUNCTION.is_logic
-        assert NodeType.SHELL_FUNCTION.is_logic
-        assert not NodeType.DATA_FILE.is_logic
+    def test_function_types(self):
+        assert NodeType.PYTHON_FUNCTION_CALL.is_function
+        assert NodeType.SHELL_FUNCTION_CALL.is_function
+        assert not NodeType.DATA_FILE.is_function
 
 
 class TestDataFileType:
     def test_create(self):
-        obj = DataFileTypeCreate(name="fits")
+        obj = DataFileTypeCreate(name="fits", version="1.0")
         assert obj.name == "fits"
 
     def test_response(self):
-        obj = DataFileType(id_=1, name="fits")
+        obj = DataFileType(id_=1, name="fits", version="1.0")
         assert obj.id_ == 1
         assert obj.name == "fits"
 
 
 class TestPythonFunction:
     def test_create(self):
-        obj = PythonFunctionCreate(name="process", module_="mymodule")
+        obj = PythonFunctionCreate(name="process", module_="mymodule", version="1.0")
         assert obj.name == "process"
         assert obj.module_ == "mymodule"
 
     def test_response(self):
-        obj = PythonFunction(id_=1, name="process", module_="mymodule")
+        obj = PythonFunction(id_=1, name="process", module_="mymodule", version="1.0")
         assert obj.id_ == 1
 
 
 class TestTypedNodeCreate:
     def test_data_file_node(self):
-        obj = DataFileNodeCreate(path="/tmp/data.fits")
-        assert obj.type_ == NodeType.DATA_FILE
-        assert obj.path == "/tmp/data.fits"
+        obj = DataFileCreate(file_path="/tmp/data.fits", creator="test")
+        assert obj.node_type == NodeType.DATA_FILE
+        assert obj.file_path == "/tmp/data.fits"
 
     def test_parameter_node(self):
-        obj = ParameterNodeCreate(value_float=3.14)
-        assert obj.type_ == NodeType.PARAMETER
-        assert obj.value_float == 3.14
+        obj = ParameterCreate(value=3.14, creator="test")
+        assert obj.node_type == NodeType.PARAMETER
+        assert obj.value == 3.14
 
 
 class TestEdge:
@@ -71,11 +70,9 @@ class TestEdge:
         assert obj.to_id == u2
 
 
-class TestExecution:
-    def test_create(self):
-        obj = ExecutionCreate(status=ExecutionStatus.RUNNING)
-        assert obj.status == ExecutionStatus.RUNNING
-
-    def test_defaults(self):
-        obj = ExecutionCreate()
-        assert obj.status == ExecutionStatus.PENDING
+class TestExecutionStatus:
+    def test_values(self):
+        assert ExecutionStatus.PENDING.value == "pending"
+        assert ExecutionStatus.RUNNING.value == "running"
+        assert ExecutionStatus.SUCCESS.value == "success"
+        assert ExecutionStatus.FAILURE.value == "failure"

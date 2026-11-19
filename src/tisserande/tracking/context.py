@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import time
-import traceback
 from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
@@ -18,9 +16,7 @@ class TrackingContext:
 
     def __init__(self, backend: TrackingBackend) -> None:
         self._backend = backend
-        self._execution_id: UUID | None = None
         self._function_node_id: UUID | None = None
-        self._start_time: float = 0.0
 
     def start_execution(
         self,
@@ -28,34 +24,17 @@ class TrackingContext:
         args: tuple[Any, ...],
         kwargs: dict[str, Any],
     ) -> None:
-        """Create Execution + function node + input nodes + input edges."""
-        self._start_time = time.time()
-
-        self._execution_id = self._backend.create_execution(
+        """Create the function call node, then input nodes and input edges."""
+        self._function_node_id = self._backend.create_node(
+            node_type=NodeType.PYTHON_FUNCTION_CALL,
             status=ExecutionStatus.RUNNING,
             start_time=datetime.now(UTC),
         )
 
-        self._function_node_id = self._backend.create_node(
-            type_=NodeType.PYTHON_FUNCTION,
-            execution_id=self._execution_id,
-            arg_name=None,
-        )
-
-        self._backend.update_execution(
-            self._execution_id,
-            function_node_id=self._function_node_id,
-        )
-
         input_specs = inspector.build_input_specs(args, kwargs)
         for spec in input_specs:
-            spec["execution_id"] = self._execution_id
             input_node_id = self._backend.create_node(**spec)
-            self._backend.create_edge(
-                from_id=input_node_id,
-                to_id=self._function_node_id,
-                execution_id=self._execution_id,
-            )
+            self._backend.create_edge(from_id=input_node_id, to_id=self._function_node_id)
 
     def finish_execution(
         self,
@@ -63,36 +42,27 @@ class TrackingContext:
         result: Any,
         exception: BaseException | None = None,
     ) -> None:
-        """Create output nodes + output edges, update Execution with timing/status."""
-        if self._execution_id is None or self._function_node_id is None:
+        """Create output nodes and edges, then update the function call node."""
+        if self._function_node_id is None:
             raise RuntimeError("finish_execution called before start_execution")
 
-        elapsed = time.time() - self._start_time
-
         if exception is not None:
-            self._backend.update_execution(
-                self._execution_id,
+            self._backend.update_node(
+                self._function_node_id,
                 status=ExecutionStatus.FAILURE,
-                duration_seconds=elapsed,
                 end_time=datetime.now(UTC),
-                error_message=str(exception),
-                error_traceback=traceback.format_exc(),
+                exception_type=type(exception).__qualname__,
+                exception_message=str(exception),
             )
             return
 
         output_specs = inspector.build_output_specs(result)
         for spec in output_specs:
-            spec["execution_id"] = self._execution_id
             output_node_id = self._backend.create_node(**spec)
-            self._backend.create_edge(
-                from_id=self._function_node_id,
-                to_id=output_node_id,
-                execution_id=self._execution_id,
-            )
+            self._backend.create_edge(from_id=self._function_node_id, to_id=output_node_id)
 
-        self._backend.update_execution(
-            self._execution_id,
+        self._backend.update_node(
+            self._function_node_id,
             status=ExecutionStatus.SUCCESS,
-            duration_seconds=elapsed,
             end_time=datetime.now(UTC),
         )

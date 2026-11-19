@@ -22,21 +22,25 @@ class ConfigDictTypeOperations(
     """Table operations for config dict types."""
 
 
-class ParameterOperations(TableOperations[db.Parameter, models.Parameter, models.ParameterCreate]):
-    """Table operations for parameters."""
+class ParameterTypeOperations(
+    TableOperations[db.ParameterType, models.ParameterType, models.ParameterTypeCreate],
+):
+    """Table operations for parameter types."""
 
 
-class ArrayOperations(TableOperations[db.Array, models.Array, models.ArrayCreate]):
-    """Table operations for arrays."""
+class ArrayTypeOperations(
+    TableOperations[db.ArrayType, models.ArrayType, models.ArrayTypeCreate],
+):
+    """Table operations for array types."""
 
 
-class ClassOperations(TableOperations[db.Class, models.Class, models.ClassCreate]):
-    """Table operations for Python classes."""
+class ClassTypeOperations(TableOperations[db.ClassType, models.Class, models.ClassCreate]):
+    """Table operations for Python class types."""
 
 
 data_file_type = DataFileTypeOperations(TableContext.from_db_class(db.DataFileType))
 config_file_type = ConfigFileTypeOperations(TableContext.from_db_class(db.ConfigFileType))
 config_dict_type = ConfigDictTypeOperations(TableContext.from_db_class(db.ConfigDictType))
-parameter = ParameterOperations(TableContext.from_db_class(db.Parameter))
-array = ArrayOperations(TableContext.from_db_class(db.Array))
-class_ = ClassOperations(TableContext.from_db_class(db.Class))
+parameter_type = ParameterTypeOperations(TableContext.from_db_class(db.ParameterType))
+array_type = ArrayTypeOperations(TableContext.from_db_class(db.ArrayType))
+class_type = ClassTypeOperations(TableContext.from_db_class(db.ClassType))

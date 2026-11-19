@@ -20,23 +20,22 @@ class TestFullStack:
         result = process("/tmp/input.fits", 0.5)
         assert result == "/tmp/output.fits"
 
-        from tisserande.local_sync import edge, execution, node
-
-        executions = execution.get_rows()
-        assert len(executions) == 1
-        assert executions[0].status == ExecutionStatus.SUCCESS
-        assert executions[0].duration_seconds is not None
-        assert executions[0].duration_seconds >= 0
-        assert executions[0].end_time is not None
-        assert executions[0].end_time >= executions[0].start_time
+        from tisserande.local_sync import edge, node
 
         nodes = node.get_rows()
         assert len(nodes) == 4
 
-        node_types = [n.type_ for n in nodes]
-        assert NodeType.PYTHON_FUNCTION in node_types
+        node_types = [n.node_type for n in nodes]
+        assert NodeType.PYTHON_FUNCTION_CALL in node_types
         assert node_types.count(NodeType.DATA_FILE) == 2
         assert node_types.count(NodeType.PARAMETER) == 1
+
+        fn_nodes = [n for n in nodes if n.node_type == NodeType.PYTHON_FUNCTION_CALL]
+        assert len(fn_nodes) == 1
+        fn_node = fn_nodes[0]
+        assert fn_node.status == ExecutionStatus.SUCCESS  # type: ignore[union-attr]
+        assert fn_node.end_time is not None  # type: ignore[union-attr]
+        assert fn_node.start_time is not None  # type: ignore[union-attr]
 
         edges = edge.get_rows()
         assert len(edges) == 3
@@ -49,12 +48,14 @@ class TestFullStack:
         with pytest.raises(RuntimeError, match="something went wrong"):
             fail_func(1.0)
 
-        from tisserande.local_sync import execution
+        from tisserande.local_sync import node
 
-        executions = execution.get_rows()
-        failed = [e for e in executions if e.status == ExecutionStatus.FAILURE]
-        assert len(failed) >= 1
-        assert "something went wrong" in failed[-1].error_message
+        nodes = node.get_rows()
+        fn_nodes = [n for n in nodes if n.node_type == NodeType.PYTHON_FUNCTION_CALL]
+        assert len(fn_nodes) >= 1
+        fn_node = fn_nodes[-1]
+        assert fn_node.status == ExecutionStatus.FAILURE  # type: ignore[union-attr]
+        assert "something went wrong" in fn_node.exception_message  # type: ignore[union-attr]
 
     def test_track_shell_creates_provenance(self):
         result = track_shell(
@@ -64,15 +65,13 @@ class TestFullStack:
         )
         assert result.returncode == 0
 
-        from tisserande.local_sync import execution, node
-
-        executions = execution.get_rows()
-        shell_execs = [e for e in executions if e.status == ExecutionStatus.SUCCESS]
-        assert len(shell_execs) >= 1
+        from tisserande.local_sync import node
 
         nodes_list = node.get_rows()
-        shell_nodes = [n for n in nodes_list if n.type_ == NodeType.SHELL_FUNCTION]
+        shell_nodes = [n for n in nodes_list if n.node_type == NodeType.SHELL_FUNCTION_CALL]
         assert len(shell_nodes) >= 1
+        shell_node = shell_nodes[-1]
+        assert shell_node.status == ExecutionStatus.SUCCESS  # type: ignore[union-attr]
 
     @pytest.mark.asyncio
     async def test_track_async_creates_provenance(self):
@@ -107,16 +106,15 @@ class TestFullStack:
         )
         assert result.returncode != 0
 
-        from tisserande.local_sync import edge, execution, node
-
-        executions = execution.get_rows()
-        failed = [e for e in executions if e.status == ExecutionStatus.FAILURE]
-        assert len(failed) >= 1
+        from tisserande.local_sync import edge, node
 
         nodes_list = node.get_rows()
-        shell_nodes = [n for n in nodes_list if n.type_ == NodeType.SHELL_FUNCTION]
+        shell_nodes = [n for n in nodes_list if n.node_type == NodeType.SHELL_FUNCTION_CALL]
         assert len(shell_nodes) >= 1
-        input_nodes = [n for n in nodes_list if n.type_ in (NodeType.DATA_FILE, NodeType.PARAMETER)]
+        shell_node = shell_nodes[-1]
+        assert shell_node.status == ExecutionStatus.FAILURE  # type: ignore[union-attr]
+
+        input_nodes = [n for n in nodes_list if n.node_type in (NodeType.DATA_FILE, NodeType.PARAMETER)]
         assert len(input_nodes) >= 2
 
         edges_list = edge.get_rows()

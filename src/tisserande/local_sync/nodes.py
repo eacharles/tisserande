@@ -5,7 +5,7 @@ from ..db.nodes import Node
 from ..local_async.nodes import node as node_async
 
 
-class NodeSyncOperations(SyncOperations[Node, models.Node, models.AnyNodeCreate]):
+class NodeSyncOperations(SyncOperations[Node, models.Node, models.NodeCreate]):
     """Synchronous operations for nodes."""
 
 

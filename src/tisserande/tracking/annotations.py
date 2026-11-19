@@ -18,7 +18,7 @@ ConfigFile = Annotated[T, "tisserande:config_file"]
 ConfigDict = Annotated[T, "tisserande:config_dict"]
 Param = Annotated[T, "tisserande:parameter"]
 ArrayArg = Annotated[T, "tisserande:array"]
-ObjectArg = Annotated[T, "tisserande:object"]
+ClassInstanceArg = Annotated[T, "tisserande:class_instance"]
 Untracked = Annotated[T, "tisserande:untracked"]
 
 ANNOTATION_MAP: dict[str, str] = {
@@ -27,6 +27,6 @@ ANNOTATION_MAP: dict[str, str] = {
     "tisserande:config_dict": "config_dict",
     "tisserande:parameter": "parameter",
     "tisserande:array": "array",
-    "tisserande:object": "object",
+    "tisserande:class_instance": "class_instance",
     "tisserande:untracked": "untracked",
 }
