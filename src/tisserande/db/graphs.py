@@ -41,12 +41,24 @@ class GraphTemplate(Base):
 
 
 class Graph(Base):
-    """ORM table for graph execution records (UUID7 PK)."""
+    """ORM base table for graph execution records (UUID7 PK).
+
+    Plugins can extend this via joined-table inheritance with their own subtable.
+    ``graph_type`` is the polymorphic discriminator.
+    """
 
     __tablename__ = "graph"
+    __mapper_args__ = {
+        "polymorphic_on": "graph_type",
+        "polymorphic_identity": "base",
+        "with_polymorphic": "*",
+    }
 
     uid_: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid7)
-    graph_template_id: Mapped[int] = mapped_column(ForeignKey("graph_template.id_"), index=True)
+    graph_type: Mapped[str] = mapped_column(String(50), index=True, default="base")
+    graph_template_id: Mapped[int | None] = mapped_column(
+        ForeignKey("graph_template.id_"), nullable=True, index=True
+    )
     status: Mapped[str] = mapped_column(String(20), default="pending")
     start_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     end_time: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

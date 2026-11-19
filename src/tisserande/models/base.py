@@ -42,7 +42,7 @@ class NodeTemplateBase(BaseModel):
     """
 
     name: str = Field(..., description="Human-readable name. Should be unique within a node_template_type.")
-    node_template_type: NodeTemplateType = Field(
+    node_template_type: NodeTemplateType | str = Field(
         ..., description="Discriminator identifying the sub-type of this template."
     )
     version: str = Field(..., description="Version string for this template.")
@@ -52,7 +52,10 @@ class NodeTemplateBase(BaseModel):
     @classmethod
     def _coerce_node_template_type(cls, v: Any) -> Any:
         if isinstance(v, str):
-            return NodeTemplateType(v)
+            try:
+                return NodeTemplateType(v)
+            except ValueError:
+                return v  # allow plugin-registered types
         return v
 
 
@@ -160,13 +163,16 @@ class NodeBase(BaseModel):
     node_template_id: int | None = Field(
         None, description="Foreign key into the NodeTemplate table. Null if no template was registered."
     )
-    node_type: NodeType = Field(..., description="Discriminator identifying the sub-type of this node.")
+    node_type: NodeType | str = Field(..., description="Discriminator identifying the sub-type of this node.")
 
     @field_validator("node_type", mode="before")
     @classmethod
     def _coerce_node_type(cls, v: Any) -> Any:
         if isinstance(v, str):
-            return NodeType(v)
+            try:
+                return NodeType(v)
+            except ValueError:
+                return v  # allow plugin-registered types
         return v
 
 
@@ -259,7 +265,7 @@ class GraphBase(BaseModel):
     versions, pipeline settings) at run time as a string-to-string mapping.
     """
 
-    graph_template_id: int = Field(..., description="Foreign key into the GraphTemplate table.")
+    graph_template_id: int | None = Field(None, description="Foreign key into the GraphTemplate table.")
     status: ExecutionStatus = Field(
         default=ExecutionStatus.PENDING, description="Overall execution status of this graph."
     )

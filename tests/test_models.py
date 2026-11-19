@@ -1,7 +1,6 @@
 """Tests for Pydantic models."""
 
-import uuid
-
+from tisserande.db.utils import uuid7
 from tisserande.models import (
     DataFileCreate,
     DataFileType,
@@ -63,8 +62,8 @@ class TestTypedNodeCreate:
 
 class TestEdge:
     def test_create(self):
-        u1 = uuid.uuid4()
-        u2 = uuid.uuid4()
+        u1 = uuid7()
+        u2 = uuid7()
         obj = EdgeCreate(from_id=u1, to_id=u2)
         assert obj.from_id == u1
         assert obj.to_id == u2
