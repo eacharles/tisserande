@@ -45,8 +45,13 @@ class PythonFunctionMixin:
     """
 
     node_template_type: Literal[NodeTemplateType.PYTHON_FUNCTION] = NodeTemplateType.PYTHON_FUNCTION
-    module_: str = Field(..., description="Fully-qualified module where this function is defined (e.g. 'mypackage.pipeline').")
-    is_async: bool = Field(default=False, description="True if this function is a coroutine (defined with async def).")
+    module_: str = Field(
+        ...,
+        description="Fully-qualified module where this function is defined (e.g. 'mypackage.pipeline').",
+    )
+    is_async: bool = Field(
+        default=False, description="True if this function is a coroutine (defined with async def)."
+    )
 
 
 class PythonFunctionCreate(FunctionNodeTemplateCreate, PythonFunctionMixin):
@@ -73,10 +78,20 @@ class PythonFunctionCallMixin:
     """
 
     node_type: Literal[NodeType.PYTHON_FUNCTION_CALL] = NodeType.PYTHON_FUNCTION_CALL
-    args_json: Any | None = Field(default=None, description="Positional arguments passed to this call, in JSON-serialisable form.")
-    kwargs_json: Any | None = Field(default=None, description="Keyword arguments passed to this call, in JSON-serialisable form.")
-    return_value_json: Any | None = Field(default=None, description="Return value of this call when it is a simple scalar or dict.")
-    source_hash: str | None = Field(default=None, description="Hash of the function's source code at the time of the call.")
+    args_json: Any | None = Field(
+        default=None,
+        description="Positional arguments passed to this call, in JSON-serialisable form.",
+    )
+    kwargs_json: Any | None = Field(
+        default=None,
+        description="Keyword arguments passed to this call, in JSON-serialisable form.",
+    )
+    return_value_json: Any | None = Field(
+        default=None, description="Return value of this call when it is a simple scalar or dict."
+    )
+    source_hash: str | None = Field(
+        default=None, description="Hash of the function's source code at the time of the call."
+    )
 
 
 class PythonFunctionCallCreate(FunctionNodeCreate, PythonFunctionCallMixin):
@@ -102,7 +117,9 @@ class MemberFunctionMixin:
 
     node_template_type: Literal[NodeTemplateType.MEMBER_FUNCTION] = NodeTemplateType.MEMBER_FUNCTION
     name: str = Field(..., description="Name of the method (without the class prefix).")
-    is_async: bool = Field(default=False, description="True if this method is a coroutine (defined with async def).")
+    is_async: bool = Field(
+        default=False, description="True if this method is a coroutine (defined with async def)."
+    )
 
 
 class MemberFunctionCreate(FunctionNodeTemplateCreate, MemberFunctionMixin):
@@ -127,11 +144,24 @@ class MemberFunctionCallMixin:
     """
 
     node_type: Literal[NodeType.MEMBER_FUNCTION_CALL] = NodeType.MEMBER_FUNCTION_CALL
-    instance_node_id: UUID | None = Field(default=None, description="UUID of the ClassInstance node that was 'self' for this call.")
-    args_json: Any | None = Field(default=None, description="Positional arguments passed to this call, in JSON-serialisable form.")
-    kwargs_json: Any | None = Field(default=None, description="Keyword arguments passed to this call, in JSON-serialisable form.")
-    return_value_json: Any | None = Field(default=None, description="Return value of this call when it is a simple scalar or dict.")
-    source_hash: str | None = Field(default=None, description="Hash of the method's source code at the time of the call.")
+    instance_node_id: UUID | None = Field(
+        default=None,
+        description="UUID of the ClassInstance node that was 'self' for this call.",
+    )
+    args_json: Any | None = Field(
+        default=None,
+        description="Positional arguments passed to this call, in JSON-serialisable form.",
+    )
+    kwargs_json: Any | None = Field(
+        default=None,
+        description="Keyword arguments passed to this call, in JSON-serialisable form.",
+    )
+    return_value_json: Any | None = Field(
+        default=None, description="Return value of this call when it is a simple scalar or dict."
+    )
+    source_hash: str | None = Field(
+        default=None, description="Hash of the method's source code at the time of the call."
+    )
 
 
 class MemberFunctionCallCreate(FunctionNodeCreate, MemberFunctionCallMixin):
@@ -157,7 +187,10 @@ class ShellFunctionMixin:
 
     node_template_type: Literal[NodeTemplateType.SHELL_FUNCTION] = NodeTemplateType.SHELL_FUNCTION
     script_path: str | None = Field(default=None, description="Path to the shell script file.")
-    interpreter: str | None = Field(default=None, description="Interpreter used to run the script (e.g. 'bash', 'zsh', 'python').")
+    interpreter: str | None = Field(
+        default=None,
+        description="Interpreter used to run the script (e.g. 'bash', 'zsh', 'python').",
+    )
 
 
 class ShellFunctionCreate(FunctionNodeTemplateCreate, ShellFunctionMixin):
@@ -180,7 +213,9 @@ class ShellFunctionCallMixin:
 
     node_type: Literal[NodeType.SHELL_FUNCTION_CALL] = NodeType.SHELL_FUNCTION_CALL
     command: str | None = Field(default=None, description="Full command string that was executed.")
-    return_code: int | None = Field(default=None, description="Process exit code (0 indicates success by convention).")
+    return_code: int | None = Field(
+        default=None, description="Process exit code (0 indicates success by convention)."
+    )
     stdout: str | None = Field(default=None, description="Captured standard output, truncated if necessary.")
     stderr: str | None = Field(default=None, description="Captured standard error, truncated if necessary.")
     working_dir: str | None = Field(default=None, description="Working directory at the time of invocation.")

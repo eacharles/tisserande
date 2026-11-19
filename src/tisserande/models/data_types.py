@@ -40,7 +40,10 @@ class DataFileTypeMixin:
     """
 
     node_template_type: Literal[NodeTemplateType.DATA_FILE_TYPE] = NodeTemplateType.DATA_FILE_TYPE
-    file_format: str | None = Field(default=None, description="Expected file format for this type (e.g. 'FITS', 'HDF5', 'parquet').")
+    file_format: str | None = Field(
+        default=None,
+        description="Expected file format for this type (e.g. 'FITS', 'HDF5', 'parquet').",
+    )
 
 
 class DataFileTypeCreate(DataNodeTemplateCreate, DataFileTypeMixin):
@@ -63,7 +66,9 @@ class DataFileMixin:
     node_type: Literal[NodeType.DATA_FILE] = NodeType.DATA_FILE
     file_path: str = Field(..., description="Path to the data file.")
     file_hash: str | None = Field(default=None, description="Hex-encoded checksum of the file contents.")
-    hash_algorithm: str | None = Field(default=None, description="Algorithm used to compute file_hash (e.g. 'sha256', 'md5').")
+    hash_algorithm: str | None = Field(
+        default=None, description="Algorithm used to compute file_hash (e.g. 'sha256', 'md5')."
+    )
     file_size_bytes: int | None = Field(default=None, description="File size in bytes.")
 
 
@@ -105,7 +110,9 @@ class ConfigFileMixin:
     node_type: Literal[NodeType.CONFIG_FILE] = NodeType.CONFIG_FILE
     file_path: str = Field(..., description="Path to the configuration file.")
     file_hash: str | None = Field(default=None, description="Hex-encoded checksum of the file contents.")
-    hash_algorithm: str | None = Field(default=None, description="Algorithm used to compute file_hash (e.g. 'sha256', 'md5').")
+    hash_algorithm: str | None = Field(
+        default=None, description="Algorithm used to compute file_hash (e.g. 'sha256', 'md5')."
+    )
     file_size_bytes: int | None = Field(default=None, description="File size in bytes.")
 
 
@@ -171,7 +178,10 @@ class ParameterTypeMixin:
     """
 
     node_template_type: Literal[NodeTemplateType.PARAMETER_TYPE] = NodeTemplateType.PARAMETER_TYPE
-    units: str | None = Field(default=None, description="Physical units expected for this parameter type (e.g. 'deg', 'Mpc/h', 'eV').")
+    units: str | None = Field(
+        default=None,
+        description="Physical units expected for this parameter type (e.g. 'deg', 'Mpc/h', 'eV').",
+    )
     dtype: str | None = Field(default=None, description="Expected value type: 'float', 'int', or 'str'.")
 
 
@@ -192,7 +202,10 @@ class ParameterMixin:
 
     node_type: Literal[NodeType.PARAMETER] = NodeType.PARAMETER
     value: float = Field(..., description="Numeric value of this parameter.")
-    units: str | None = Field(default=None, description="Physical units of this parameter value. Overrides the template default when set.")
+    units: str | None = Field(
+        default=None,
+        description="Physical units of this parameter value. Overrides the template default when set.",
+    )
 
 
 class ParameterCreate(DataNodeCreate, ParameterMixin):
@@ -218,8 +231,12 @@ class ArrayTypeMixin:
     """
 
     node_template_type: Literal[NodeTemplateType.ARRAY_TYPE] = NodeTemplateType.ARRAY_TYPE
-    dtype: str | None = Field(default=None, description="Expected numpy dtype string (e.g. 'float64', 'int32').")
-    units: str | None = Field(default=None, description="Physical units on the array values (e.g. 'deg', 'Jy').")
+    dtype: str | None = Field(
+        default=None, description="Expected numpy dtype string (e.g. 'float64', 'int32')."
+    )
+    units: str | None = Field(
+        default=None, description="Physical units on the array values (e.g. 'deg', 'Jy')."
+    )
     ndim: int | None = Field(default=None, description="Expected number of dimensions.")
 
 
@@ -243,9 +260,16 @@ class ArrayMixin:
 
     node_type: Literal[NodeType.ARRAY] = NodeType.ARRAY
     shape: list[int] = Field(..., description="Shape of the array (list of dimension sizes).")
-    dtype: str | None = Field(default=None, description="Numpy dtype string of this array instance (e.g. 'float64').")
-    file_path: str | None = Field(default=None, description="Path to the file storing this array when it is too large to serialise inline.")
-    value_json: Any | None = Field(default=None, description="Optional JSON-serialisable representation of small array contents.")
+    dtype: str | None = Field(
+        default=None, description="Numpy dtype string of this array instance (e.g. 'float64')."
+    )
+    file_path: str | None = Field(
+        default=None,
+        description="Path to the file storing this array when it is too large to serialise inline.",
+    )
+    value_json: Any | None = Field(
+        default=None, description="Optional JSON-serialisable representation of small array contents."
+    )
 
 
 class ArrayCreate(DataNodeCreate, ArrayMixin):
@@ -271,7 +295,9 @@ class ClassMixin:
     """
 
     node_template_type: Literal[NodeTemplateType.CLASS_TYPE] = NodeTemplateType.CLASS_TYPE
-    module_: str = Field(..., description="Fully-qualified module where this class is defined (e.g. 'mypackage.models').")
+    module_: str = Field(
+        ..., description="Fully-qualified module where this class is defined (e.g. 'mypackage.models')."
+    )
 
 
 class ClassCreate(DataNodeTemplateCreate, ClassMixin):
@@ -291,7 +317,10 @@ class ClassInstanceMixin:
     """
 
     node_type: Literal[NodeType.CLASS_INSTANCE] = NodeType.CLASS_INSTANCE
-    ctor_values_json: Any | None = Field(default=None, description="Optional JSON-serialisable constructor arguments used to create this instance.")
+    ctor_values_json: Any | None = Field(
+        default=None,
+        description="Optional JSON-serialisable constructor arguments used to create this instance.",
+    )
 
 
 class ClassInstanceCreate(DataNodeCreate, ClassInstanceMixin):

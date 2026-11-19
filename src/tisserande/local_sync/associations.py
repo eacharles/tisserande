@@ -6,7 +6,9 @@ from ..local_async.associations import assoc_template as assoc_template_async
 from ..local_async.associations import association as association_async
 
 
-class AssocTemplateSyncOperations(SyncOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]):
+class AssocTemplateSyncOperations(
+    SyncOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]
+):
     """Synchronous operations for assoc templates."""
 
 

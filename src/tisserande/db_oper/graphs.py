@@ -4,7 +4,9 @@ from .. import models
 from ..db.graphs import Graph, GraphTemplate
 
 
-class GraphTemplateOperations(TableOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]):
+class GraphTemplateOperations(
+    TableOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]
+):
     """Table operations for graph templates."""
 
 

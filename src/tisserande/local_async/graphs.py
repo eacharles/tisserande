@@ -6,7 +6,9 @@ from ..db_oper.graphs import graph as graph_ops
 from ..db_oper.graphs import graph_template as graph_template_ops
 
 
-class GraphTemplateLocalOperations(LocalOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]):
+class GraphTemplateLocalOperations(
+    LocalOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]
+):
     """Async session-managed operations for graph templates."""
 
 

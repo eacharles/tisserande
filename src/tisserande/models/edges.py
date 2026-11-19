@@ -32,7 +32,13 @@ class EdgeTemplateBase(BaseModel):
 
     from_id: int = Field(..., description="Primary key of the source NodeTemplate.")
     to_id: int = Field(..., description="Primary key of the destination NodeTemplate.")
-    arg_name: str | None = Field(default=None, description="Parameter name the destination NodeTemplate exposes for this connection (e.g. 'input_catalog').")
+    arg_name: str | None = Field(
+        default=None,
+        description=(
+            "Parameter name the destination NodeTemplate exposes for this connection"
+            " (e.g. 'input_catalog')."
+        ),
+    )
 
 
 class EdgeTemplateCreate(EdgeTemplateBase):
@@ -58,7 +64,13 @@ class EdgeBase(BaseModel):
 
     from_id: UUID = Field(..., description="UUID of the source Node.")
     to_id: UUID = Field(..., description="UUID of the destination Node.")
-    edge_template_id: int | None = Field(default=None, description="Foreign key into the EdgeTemplate table. Null if this edge was not instantiated from a template.")
+    edge_template_id: int | None = Field(
+        default=None,
+        description=(
+            "Foreign key into the EdgeTemplate table."
+            " Null if this edge was not instantiated from a template."
+        ),
+    )
 
 
 class EdgeCreate(EdgeBase):

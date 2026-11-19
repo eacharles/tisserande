@@ -4,7 +4,9 @@ from .. import models
 from ..db.associations import AssocTemplate, Association
 
 
-class AssocTemplateOperations(TableOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]):
+class AssocTemplateOperations(
+    TableOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]
+):
     """Table operations for assoc templates."""
 
 

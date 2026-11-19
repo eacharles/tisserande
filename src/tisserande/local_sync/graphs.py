@@ -6,7 +6,9 @@ from ..local_async.graphs import graph as graph_async
 from ..local_async.graphs import graph_template as graph_template_async
 
 
-class GraphTemplateSyncOperations(SyncOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]):
+class GraphTemplateSyncOperations(
+    SyncOperations[GraphTemplate, models.GraphTemplate, models.GraphTemplateCreate]
+):
     """Synchronous operations for graph templates."""
 
 

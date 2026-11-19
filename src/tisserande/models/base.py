@@ -42,7 +42,9 @@ class NodeTemplateBase(BaseModel):
     """
 
     name: str = Field(..., description="Human-readable name. Should be unique within a node_template_type.")
-    node_template_type: NodeTemplateType = Field(..., description="Discriminator identifying the sub-type of this template.")
+    node_template_type: NodeTemplateType = Field(
+        ..., description="Discriminator identifying the sub-type of this template."
+    )
     version: str = Field(..., description="Version string for this template.")
     is_superseded: bool = Field(default=False, description="True if a newer version of this template exists.")
 
@@ -123,7 +125,9 @@ class GraphTemplateBase(BaseModel):
     """
 
     name: str = Field(..., description="Human-readable name for this graph template. Should be unique.")
-    description: str | None = Field(default=None, description="Optional free-text description of what this graph computes.")
+    description: str | None = Field(
+        default=None, description="Optional free-text description of what this graph computes."
+    )
     version: str | None = Field(default=None, description="Version string for this graph template.")
 
 
@@ -153,7 +157,9 @@ class NodeBase(BaseModel):
     provides shared type metadata.
 """
 
-    node_template_id: int | None = Field(None, description="Foreign key into the NodeTemplate table. Null if no template was registered.")
+    node_template_id: int | None = Field(
+        None, description="Foreign key into the NodeTemplate table. Null if no template was registered."
+    )
     node_type: NodeType = Field(..., description="Discriminator identifying the sub-type of this node.")
 
     @field_validator("node_type", mode="before")
@@ -185,10 +191,14 @@ class DataNodeMixin:
     fields and set ``node_type`` to the appropriate ``Literal``.
     """
 
-    creator: str = Field(..., description="Identifier of who or what created this data (e.g. username or process name).")
+    creator: str = Field(
+        ..., description="Identifier of who or what created this data (e.g. username or process name)."
+    )
     create_time: datetime | None = Field(default=None, description="When this data was created.")
     update_time: datetime | None = Field(default=None, description="When this data was last updated.")
-    delete_time: datetime | None = Field(default=None, description="When this data was deleted, if applicable.")
+    delete_time: datetime | None = Field(
+        default=None, description="When this data was deleted, if applicable."
+    )
 
 
 class DataNodeCreate(NodeCreate, DataNodeMixin):
@@ -210,11 +220,18 @@ class FunctionNodeMixin:
     Concrete sub-types set ``node_type`` to the appropriate ``Literal``.
     """
 
-    status: ExecutionStatus = Field(default=ExecutionStatus.PENDING, description="Execution status of this function call.")
+    status: ExecutionStatus = Field(
+        default=ExecutionStatus.PENDING, description="Execution status of this function call."
+    )
     start_time: datetime | None = Field(default=None, description="When execution started.")
     end_time: datetime | None = Field(default=None, description="When execution ended.")
-    exception_type: str | None = Field(default=None, description="Fully-qualified exception class name if the call failed (e.g. 'ValueError').")
-    exception_message: str | None = Field(default=None, description="Exception message string if the call failed.")
+    exception_type: str | None = Field(
+        default=None,
+        description="Fully-qualified exception class name if the call failed (e.g. 'ValueError').",
+    )
+    exception_message: str | None = Field(
+        default=None, description="Exception message string if the call failed."
+    )
 
 
 class FunctionNodeCreate(NodeCreate, FunctionNodeMixin):
@@ -243,12 +260,19 @@ class GraphBase(BaseModel):
     """
 
     graph_template_id: int = Field(..., description="Foreign key into the GraphTemplate table.")
-    status: ExecutionStatus = Field(default=ExecutionStatus.PENDING, description="Overall execution status of this graph.")
+    status: ExecutionStatus = Field(
+        default=ExecutionStatus.PENDING, description="Overall execution status of this graph."
+    )
     start_time: datetime | None = Field(default=None, description="When execution of this graph started.")
     end_time: datetime | None = Field(default=None, description="When execution of this graph ended.")
     hostname: str | None = Field(default=None, description="Hostname of the machine on which this graph ran.")
-    user: str | None = Field(default=None, description="Username or identifier of who initiated this graph run.")
-    environment_json: dict[str, str] | None = Field(default=None, description="Snapshot of relevant environment variables at run time (string → string mapping).")
+    user: str | None = Field(
+        default=None, description="Username or identifier of who initiated this graph run."
+    )
+    environment_json: dict[str, str] | None = Field(
+        default=None,
+        description="Snapshot of relevant environment variables at run time (string → string mapping).",
+    )
 
 
 class GraphCreate(GraphBase):
@@ -259,6 +283,8 @@ class Graph(GraphBase):
     """Graph response model — includes the database-assigned UUID primary key."""
 
     model_config = ConfigDict(from_attributes=True)
-    col_names_for_table: ClassVar[list[str]] = ["uid_", "graph_template_id", "status", "start_time", "end_time", "hostname", "user"]
+    col_names_for_table: ClassVar[list[str]] = [
+        "uid_", "graph_template_id", "status", "start_time", "end_time", "hostname", "user"
+    ]
 
     uid_: UUID = Field(..., description="UUID7 primary key (time-ordered).")

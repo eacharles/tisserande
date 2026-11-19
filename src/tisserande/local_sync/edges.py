@@ -6,7 +6,9 @@ from ..local_async.edges import edge as edge_async
 from ..local_async.edges import edge_template as edge_template_async
 
 
-class EdgeTemplateSyncOperations(SyncOperations[EdgeTemplate, models.EdgeTemplate, models.EdgeTemplateCreate]):
+class EdgeTemplateSyncOperations(
+    SyncOperations[EdgeTemplate, models.EdgeTemplate, models.EdgeTemplateCreate]
+):
     """Synchronous operations for edge templates."""
 
 

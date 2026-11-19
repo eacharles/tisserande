@@ -6,7 +6,9 @@ from ..db_oper.associations import assoc_template as assoc_template_ops
 from ..db_oper.associations import association as association_ops
 
 
-class AssocTemplateLocalOperations(LocalOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]):
+class AssocTemplateLocalOperations(
+    LocalOperations[AssocTemplate, models.AssocTemplate, models.AssocTemplateCreate]
+):
     """Async session-managed operations for assoc templates."""
 
 

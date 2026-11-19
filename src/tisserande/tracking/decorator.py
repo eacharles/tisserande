@@ -238,7 +238,6 @@ def track_shell(
             input_node_id = be.create_node(**kwargs)
             be.create_edge(from_id=input_node_id, to_id=function_node_id)
 
-    import time
 
     result = subprocess.run(
         command,

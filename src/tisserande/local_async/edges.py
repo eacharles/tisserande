@@ -6,7 +6,9 @@ from ..db_oper.edges import edge as edge_ops
 from ..db_oper.edges import edge_template as edge_template_ops
 
 
-class EdgeTemplateLocalOperations(LocalOperations[EdgeTemplate, models.EdgeTemplate, models.EdgeTemplateCreate]):
+class EdgeTemplateLocalOperations(
+    LocalOperations[EdgeTemplate, models.EdgeTemplate, models.EdgeTemplateCreate]
+):
     """Async session-managed operations for edge templates."""
 
 
